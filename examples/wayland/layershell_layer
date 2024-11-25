@@ -1,0 +1,59 @@
+#!/bin/sh
+
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
+
+if [ -z "WAYLAND_DISPLAY" ]; then
+	echo '<window>
+	       <vbox>
+	         <text><label>ERROR: You are not running wayland</label></text>
+	       <hbox>
+	         <button ok></button>
+	       </hbox>
+	       </vbox>
+	     </window>' | $GTK3DIALOG -s
+	     exit
+fi
+
+PID=$$
+
+for i in background bottom top overlay
+do
+	o=" $i"
+	case $i in
+		background)T='All windows can cover this.';;
+		bottom)T='Most windows can cover this.';;
+		top)T='Only overlay windows can cover this.';;
+		overlay)T='No windows can cover this.';o="n $i";;
+	esac
+	
+
+MAIN_DIALOG='
+<window layer="'$i'" width-request="320">
+	<vbox>
+		<frame Description>
+			<text use-markup="true" tooltip-text="Drag a window over this one to test">
+				<label>"<big><big>This is a'$o' window.</big></big>"</label>
+			</text>
+			<text>
+				<label>'$T'</label>
+			</text>
+		</frame>
+		<hbox>
+			<button ok></button>
+			<button>
+				<label>Cancel</label>
+				<input file icon="gtk-cancel"></input>
+				<action>kill '$PID'</action>
+				<action>exit:CANCEL</action>
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
+esac
+done

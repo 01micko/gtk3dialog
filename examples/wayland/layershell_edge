@@ -1,0 +1,76 @@
+#!/bin/sh
+
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
+
+if [ -z "WAYLAND_DISPLAY" ]; then
+	echo '<window>
+	       <vbox>
+	         <text><label>ERROR: You are not running wayland</label></text>
+	       <hbox>
+	         <button ok></button>
+	       </hbox>
+	       </vbox>
+	     </window>' | $GTK3DIALOG -s
+	     exit
+fi
+
+PID=$$
+
+for i in topleft top topright right bottomright bottom bottomleft left foo
+do
+	POS=" $i"
+	case $i in
+		topleft)C='#FF0000';OPT='edge="'$i'"';T=right;;
+		top)C='#FFFF00';OPT='edge="'$i'"';T=right;;
+		topright)C='#00FF00';OPT='edge="'$i'"';T=down;;
+		right)C='#00FF00';OPT='edge="'$i'"';T=down;;
+		bottomright)C='#00FF00';OPT='edge="'$i'"';T=left;;
+		bottom)C='#FFFF00';OPT='edge="'$i'"';T=left;;
+		bottomleft)C='#FF0000';OPT='edge="'$i'"';T=up;;
+		left)C='#FF0000';OPT='edge="'$i'"';T='to center';;
+		foo)C='#0066AA';OPT='';T=finished;POS=center;;
+	esac
+	
+
+MAIN_DIALOG='
+<window layer="top" dist="50" '$OPT' width-request="320">
+	<vbox>
+		<frame Description>
+			<text use-markup="true" tooltip-text="Drag a window over this one to test">
+				<label>"<big><big>This is '$POS'. Now <span fgcolor='"'$C'"'>Click</span>!</big></big>"</label>
+			</text>
+			<text>
+				<label>Move '$T'</label>
+			</text>
+		</frame>
+		<hbox>
+			<button>
+				<label>Click</label>
+				<input file icon="input-mouse"></input>
+				<action>exit:'$T'</action>
+			</button>
+			<button>
+				<label>Cancel</label>
+				<input file icon="gtk-cancel"></input>
+				<action>kill '$PID'</action>
+				<action>exit:CANCEL</action>
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
+esac
+if [ "$i" = "foo" ]; then
+	echo '<window layer="top">
+  <vbox>
+    <pixmap><width>160</width><input file icon="face-smile"></input></pixmap>
+    <hbox><button ok></button></hbox>
+  </vbox>
+</window>' | $GTK3DIALOG -s
+fi
+done

@@ -7,7 +7,7 @@
 if [ -n "$WAYLAND_DISPLAY" ] ; then
 	OPT='<window layer="bottom" edge="topright" dist="50">'
 else
-	OPT='<window>'
+	OPT='<window decorated="false">'
 fi
 
 export TMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
@@ -50,10 +50,6 @@ echo '<?xml version="1.0" encoding="utf-8"?>
 	<circle fill="url(#RG2)" cx="258" cy="258" r="242" />
 	<circle fill="url(#RG1)" cx="256" cy="256" r="240" />
 
-    <g transform="scale(0.7) translate(100 114)">
-      <path d="M 181,351 A 250 250 0 0 1 274,16 Q 278,12 278,16 A 100 100 0 0 0 292,97 A 300 300 0 0 1 266,493 Q 262,497 260,493 Q 330,270 238,200 A 160 160 0 0 0 185,351 Q 180,354 181,351 z" style="fill:url(#RG2);stroke-linejoin:round;"/>
-    </g>
-    
     <style>
     .roman {
       font: 42px serif;
@@ -101,11 +97,12 @@ export -f pixfunc
 pixfunc
 
 export MAIN_DIALOG=''$OPT'
- <vbox>
-  <pixmap>
+ <vbox tooltip-text="press to close">
+  <button relief="2">
     <variable>PIX</variable>
     <input file>'$TMPDIR/bunsen-clock.svg'</input>
-  </pixmap> 
+    <action>exit:CLOSED</action>
+  </button> 
   <timer interval="1" visible="false">
     <action>pixfunc</action>
     <action type="refresh">PIX</action>
