@@ -15,7 +15,7 @@ mkdir -p  $TMPDIR
 
 echo 'window {
 	background-color: rgba(0, 0, 0, 0);
-}' > $TMPDIR/bunsen-clock.css
+}' > $TMPDIR/clock.css
 
 SEC=$(date +%-S)
 SEC_ANGLE=$(($SEC * 6))
@@ -77,7 +77,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>
 	<polygon fill="#FFFFFF" id="clockhand_min" points="253.5,115 253.5,256 253.5,301 258.5,301 258.5,256 258.5,115" transform="rotate('$2',256,256)"/>
 	<polygon fill="#7E0000" id="clockhand_sec" points="258,271 257,271 257,256 257,126 255,126 255,256 255,271 254,271 252,321 260,321" transform="rotate('$3',256,256)"/>
 	<circle fill="#FFFFFF" cx="256" cy="256" r="8"/>
-</svg>' > $TMPDIR/bunsen-clock.svg
+</svg>' > $TMPDIR/clock.svg
 }
 export -f clk2svg
 
@@ -100,7 +100,7 @@ export MAIN_DIALOG=''$OPT'
  <vbox tooltip-text="press to close">
   <button relief="2">
     <variable>PIX</variable>
-    <input file>'$TMPDIR/bunsen-clock.svg'</input>
+    <input file>'$TMPDIR/clock.svg'</input>
     <action>exit:CLOSED</action>
   </button> 
   <timer interval="1" visible="false">
@@ -112,6 +112,6 @@ export MAIN_DIALOG=''$OPT'
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTK3DIALOG --program=MAIN_DIALOG --styles=$TMPDIR/bunsen-clock.css;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG --styles=$TMPDIR/clock.css;;
 esac
 
