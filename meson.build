@@ -7,6 +7,7 @@ gtkver = get_option('gtkver')
 if gtkver == 3
 	gtk = dependency('gtk+-3.0')
 	vte = dependency('vte-2.91', required: false)
+	libnotify = dependency('libnotify', required: false)
 	gtk_layer_shell = dependency('gtk-layer-shell-0', required: false)
 	if not gtk_layer_shell.found()
 		proj = subproject(
