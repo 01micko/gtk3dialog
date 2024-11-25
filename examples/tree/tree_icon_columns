@@ -9,7 +9,7 @@
 
 # This example requires bash.
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 funcInputstock() {
 	echo "gtk-open | | gtk-open | 2 "
@@ -71,5 +71,5 @@ export MAIN_DIALOG='
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

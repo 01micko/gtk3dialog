@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 MAIN_DIALOG='
 <window title="MenuItemSeparator" resizable="false" width-request="360" height-request="240"  border-width="0">
@@ -35,5 +35,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

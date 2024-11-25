@@ -8,8 +8,8 @@
 # widget can test the truth value of another widget directly, that is, without
 # needing a backing file or a shell command to get the truth value.
 
-# Consider some old gtkdialog scripts that use this kind of conditional action
-# for hypothetical gtkdialog widgets W and TOGGLE:
+# Consider some old gtk3dialog scripts that use this kind of conditional action
+# for hypothetical gtk3dialog widgets W and TOGGLE:
 # <action condition="file_is_true(/some/TOGGLE)">W does something</action>
 # where the content of /some/TOGGLE reflects the truth value widget
 # TOGGLE (TOGGLE is the name inside <variable>TOGGLE</varible>).
@@ -29,15 +29,15 @@
 # No setup is necessary, it is faster and needs less code overall, which means
 # fewer bugs.
 
-# Sometimes old gtkdialog scripts use condition "command_is_true" to test a
+# Sometimes old gtk3dialog scripts use condition "command_is_true" to test a
 # truth value in a file, for example:
 # <action condition="command_is_true(echo $TOGGLE)">...<action>
 # Here too variable_is_true can replace this king of command_is_true usage:
 # <action condition="variable_is_true(TOGGLE)>...</action>
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+TMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 export    True='<span font="monospace bold" fgcolor="green">TRUE</span>'
 export   False='<span font="monospace bold" fgcolor="red">FALSE</span>'
@@ -104,5 +104,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
 esac

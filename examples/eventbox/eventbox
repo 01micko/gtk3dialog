@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 ## ---------------------------------------------------------------------
 ## Local Functions
@@ -73,12 +73,12 @@ funcSignalsCreate() {
 ## Main
 ## ---------------------------------------------------------------------
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+TMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 EXTRA_ARGS=
 
-case `$GTKDIALOG -v` in
+case `$GTK3DIALOG -v` in
 	*"GTK+ 3"*) funcgtkcssCreate ;;
 	*) funcgtkrcCreate ;;
 esac
@@ -134,5 +134,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG $EXTRA_ARGS ;;
+	*) $GTK3DIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG $EXTRA_ARGS ;;
 esac

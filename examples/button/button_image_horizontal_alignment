@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 funcbtnCreate() {
 	echo '<button image-position="'$1'" homogeneous="'$2'">
@@ -62,5 +62,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --space-expand=true --space-fill=true --program=MAIN_DIALOG ;;
 esac

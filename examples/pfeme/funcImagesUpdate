@@ -86,7 +86,7 @@ funcImagesUpdate() {
 		ln -fs $ImageDefault $TEMP_DIR/Image1
 		ln -fs $ImageDefault $TEMP_DIR/Image2
 
-		## This is called at the start before gtkdialog is run so it
+		## This is called at the start before gtk3dialog is run so it
 		## is necessary to check that the widget actually exists.
 		if [ -n "$chkImagesRefreshCheck" ]; then
 			funcWidgetSchedule chkImagesRefreshCheck ImagesRefreshCheck

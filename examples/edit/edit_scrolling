@@ -1,8 +1,8 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
-TMPD=/tmp/gtkdialog/examples/"`basename $0`"
+TMPD=/tmp/gtk3dialog/examples/"`basename $0`"
 mkdir -p "$TMPD"
 max=10
 
@@ -35,5 +35,5 @@ done
 echo done
 ) > "$TMPD/count$max" &
 
-$GTKDIALOG --program=MAIN_DIALOG
+$GTK3DIALOG --program=MAIN_DIALOG
 

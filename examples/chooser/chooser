@@ -5,13 +5,13 @@
 # mm_view, and desktop wallpaper setters.  Unlike the fileselect function of
 # the entry widget, chooser does not have its own window, and only implements a
 # "file open" function, therefore there is no new directory creation button.
-# File filters are implemented.  Pretty much all standard gtkdialog 0.8.4
+# File filters are implemented.  Pretty much all standard gtk3dialog 0.8.4
 # features are implemented, including signal chain handling with `signal` and
 # `condition` custom tags and function `break`, and <input> and <output> tags.
 # For compatibility with older scripts, the deprecated "when" custom tag is
 # supported by translation into the "signal" tag.
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 MAIN_DIALOG='
 <window title="Chooser 2022 Basic" resizable="false">
@@ -38,5 +38,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

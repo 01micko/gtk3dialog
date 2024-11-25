@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 funcRandom() {
 	od -An -N2 -tu2 < /dev/urandom
@@ -63,11 +63,11 @@ funcExampleCreate() {
 				<label>Next example</label>
 				<input file stock="gtk-go-forward"></input>'
 	if [ $1 = 0 ]; then echo '
-				<action>'"$GTKDIALOG"' --space-expand=true --program=CLI_EXPAND_METHOD &</action>'
+				<action>'"$GTK3DIALOG"' --space-expand=true --program=CLI_EXPAND_METHOD &</action>'
 	elif [ $1 = 1 ]; then echo '
-				<action>'"$GTKDIALOG"' --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_METHOD &</action>'
+				<action>'"$GTK3DIALOG"' --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_METHOD &</action>'
 	elif [ $1 = 2 ]; then echo '
-				<action>'"$GTKDIALOG"' --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD &</action>'
+				<action>'"$GTK3DIALOG"' --space-expand=true --space-fill=true --program=CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD &</action>'
 	else echo '
 				<sensitive>false</sensitive>'
 	fi
@@ -97,5 +97,5 @@ case $1 in
 		echo "$CLI_EXPAND_PLUS_FILL_METHOD"
 		echo "$CLI_EXPAND_PLUS_FILL_PLUS_TWEAKS_METHOD"
 		;;
-	*) $GTKDIALOG --program=ORIGINAL_METHOD ;;
+	*) $GTK3DIALOG --program=ORIGINAL_METHOD ;;
 esac

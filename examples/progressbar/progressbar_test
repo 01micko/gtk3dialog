@@ -2,7 +2,7 @@
 
 # This example requires bash.
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 progress() {
 	for i in $(seq 0 10 100); do 
@@ -74,5 +74,5 @@ export MAIN_DIALOG='
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" "$BAR_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

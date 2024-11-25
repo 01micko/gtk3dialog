@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-Set gtkdialog-window over 'vbox' and 'hbox':
+Set gtk3dialog-window over 'vbox' and 'hbox':
 OK-button 			Cancel-button
 Help-button 		Label-MyLabel
 Entry-single-string
@@ -104,8 +104,8 @@ int main(int argc, char *argv[]) {
 	"</vbox>");
 	/* end of put environment - MAIN_DIALOG */
 
-	/* open gtkdialog as stream */
-	stream = popen("gtkdialog --program=MAIN_DIALOG", "r");
+	/* open gtk3dialog as stream */
+	stream = popen("gtk3dialog --program=MAIN_DIALOG", "r");
 	fgets(line, 255, stream);
 	printf("Last window-widget is: %s\n", line);
 

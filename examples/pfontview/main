@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 # Pfontview (c) Thunor 2012
 # GNU GENERAL PUBLIC LICENSE Version 2, June 1991
@@ -129,15 +129,15 @@ if [ ! `command -v fc-query` ]; then
 	echo "Couldn't find fc-query"
 	exit 1
 fi
-if [ ! `command -v $GTKDIALOG` ]; then
-	echo "Couldn't find $GTKDIALOG"
+if [ ! `command -v $GTK3DIALOG` ]; then
+	echo "Couldn't find $GTK3DIALOG"
 	exit 1
 fi
-funcAppVersionGet "$GTKDIALOG -v" 2
-if [ $minor_version -ge 8 -a $micro_version -ge 2 ]; then
+funcAppVersionGet "$GTK3DIALOG -v" 2
+if [ $minor_version -ge 1 -a $micro_version -ge 0 ]; then
 	true
 else
-	echo "Couldn't find $GTKDIALOG >= 0.8.2"
+	echo "Couldn't find $GTK3DIALOG >= 0.8.2"
 	exit 1
 fi
 
@@ -357,7 +357,7 @@ echo '
 ' > $TEMP_DIR/winMain
 
 ## Export everything necessary.
-export GTKDIALOG
+export GTK3DIALOG
 export TARGET
 export TITLE
 export VERSION
@@ -369,11 +369,11 @@ export DEBUG_TRANSITS
 export PATH
 export TEMP_DIR
 export GTK2_RC_FILES
-export GTKDIALOG_PIXMAP_PATH=/usr/local/lib/X11/mini-icons:\
+export GTK3DIALOG_PIXMAP_PATH=/usr/local/lib/X11/mini-icons:\
 /usr/local/lib/X11/pixmaps:/usr/share/pixmaps:/usr/share/icons
 
 ## And off we go...
-$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
+$GTK3DIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
 
 ## Remove the temporary files.
 rm $FontSymlink

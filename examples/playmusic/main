@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 # PlayMusic (c) Thunor 2011
 # GNU GENERAL PUBLIC LICENSE Version 2, June 1991
@@ -428,7 +428,7 @@ Right-click: Previous album">
 ' > $TEMP_DIR/dialog_main
 
 ## Export everything necessary.
-export GTKDIALOG
+export GTK3DIALOG
 export TARGET
 export TITLE
 export VERSION
@@ -447,7 +447,7 @@ export DIALOG_COVER
 funcDialogReadMeOpen
 
 ## And off we go...
-$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/dialog_main
+$GTK3DIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/dialog_main
 
 ## Stop any playing track.
 funcStop

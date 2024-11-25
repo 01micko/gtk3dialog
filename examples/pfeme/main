@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 # Pfeme (c) Thunor 2012
 # GNU GENERAL PUBLIC LICENSE Version 2, June 1991
@@ -382,15 +382,15 @@ funcTabsImagesCreate() {
 ## ----------------------------------------------------------------------------
 
 ## Check requirements.
-if [ ! `command -v $GTKDIALOG` ]; then
-	echo "Couldn't find $GTKDIALOG"
+if [ ! `command -v $GTK3DIALOG` ]; then
+	echo "Couldn't find $GTK3DIALOG"
 	exit 1
 fi
-funcAppVersionGet "$GTKDIALOG -v" 2
-if [ $minor_version -ge 8 -a $micro_version -ge 3 ]; then
+funcAppVersionGet "$GTK3DIALOG -v" 2
+if [ $minor_version -ge 1 -a $micro_version -ge 0 ]; then
 	true
 else
-	echo "Couldn't find $GTKDIALOG >= 0.8.3"
+	echo "Couldn't find $GTK3DIALOG >= 0.8.3"
 	exit 1
 fi
 
@@ -616,7 +616,7 @@ while [ true ]; do
 ' > $TEMP_DIR/winMain
 
 	## Export everything necessary.
-	export GTKDIALOG
+	export GTK3DIALOG
 	export TARGET
 	export TITLE
 	export VERSION
@@ -635,7 +635,7 @@ while [ true ]; do
 	export winHelp
 
 	## And off we go...
-	$GTKDIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
+	$GTK3DIALOG --space-expand=true --space-fill=true --file=$TEMP_DIR/winMain
 
 	if [ `functmpGet ApplicationRestart` = false ]; then break; fi
 

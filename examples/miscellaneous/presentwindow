@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 funcbtnCreate() {
 	echo '<button>
@@ -16,7 +16,7 @@ funcbtnCreate() {
 # launched window will not return to the window that launched it so for
 # example any actions following a launch action will not be executed and
 # launching directly from within a timer is definitely a no-no although
-# gtkdialog checks for that and dumps a warning message to the terminal.
+# gtk3dialog checks for that and dumps a warning message to the terminal.
 # 
 # So, knowing the above you will understand that we can't launch three
 # new windows successively within the same list of actions and we can't
@@ -115,5 +115,5 @@ export winLaunch3
 
 case $1 in
 	-d | --dump) echo "$winLaunch0" "$winLaunch1" "$winLaunch2" "$winLaunch3" ;;
-	*) $GTKDIALOG --program=winLaunch0 ;;
+	*) $GTK3DIALOG --program=winLaunch0 ;;
 esac

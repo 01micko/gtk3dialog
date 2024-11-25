@@ -1,8 +1,8 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
-TMPDIR="/tmp/gtkdialog/examples/${0##*/}"
+TMPDIR="/tmp/gtk3dialog/examples/${0##*/}"
 mkdir -p "$TMPDIR"
 printf "$(dirname "${TMPDIR%/*}")" > "$TMPDIR"/out_in
 
@@ -41,5 +41,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

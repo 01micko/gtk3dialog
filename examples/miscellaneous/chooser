@@ -13,7 +13,7 @@
 # to using <action signal="type">, the signal is instead specified by
 # the application developer using <action when="type">.
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 MAIN_DIALOG='
 <window title="Chooser Widget Example" resizable="false">
@@ -40,5 +40,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

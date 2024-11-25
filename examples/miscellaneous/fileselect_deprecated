@@ -3,7 +3,7 @@
 # Thunor: The FILE_BROWSE_NEWDIRECTORY example crashes if a directory
 # name isn't supplied.
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 MAIN_DIALOG='
 <window>
@@ -83,5 +83,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

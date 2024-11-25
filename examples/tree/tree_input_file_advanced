@@ -2,9 +2,9 @@
 
 # This example requires bash.
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
-TMPDIR=/tmp/gtkdialog/examples/"`basename $0`"
+TMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
 mkdir -p "$TMPDIR"
 
 treWidth=320; treHeight=200
@@ -121,5 +121,5 @@ exported-column='3'"'"</label>
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

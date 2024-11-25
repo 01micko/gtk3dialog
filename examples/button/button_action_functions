@@ -5,7 +5,7 @@
 # See execute_action() for more information.
 #
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 DIALOG='
 <window>
@@ -92,5 +92,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$DIALOG" "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

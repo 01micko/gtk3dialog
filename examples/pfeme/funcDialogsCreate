@@ -155,7 +155,7 @@ Do you want to restart now?
 				<hbox homogeneous="true" space-expand="false" space-fill="false">
 					<button relief="2">
 						<label>Made with Gtkdialog</label>
-						<action>. funcURLOpen; funcURLOpen "http://code.google.com/p/gtkdialog/"</action>
+						<action>. funcURLOpen; funcURLOpen "http://code.google.com/p/gtk3dialog/"</action>
 					</button>
 				</hbox>
 				<text justify="2">

@@ -10,7 +10,7 @@
 # that results from the user filtering the file list does not match the
 # selection. (GTK3)
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 [ -d "$1" ] && image_folder="$1" || image_folder="/usr/share/pixmaps"
 this="$(find "$image_folder" -maxdepth 1 -type f | shuf | head -1)"
@@ -84,5 +84,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

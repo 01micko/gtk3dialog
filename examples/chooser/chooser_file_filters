@@ -6,7 +6,7 @@
 # "fs-filters-mime"   like <entry>'s and listed before fs-filters
 # "fs-filters"        like <entry>'s
 		*/
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 this="$(find "/usr/share/pixmaps" -maxdepth 1 -type f | shuf | head -1)"
 
@@ -40,5 +40,5 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

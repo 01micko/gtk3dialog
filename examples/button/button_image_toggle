@@ -1,10 +1,10 @@
 #!/bin/bash
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 # This example requires bash.
 
-export TMPDIR=/tmp/gtkdialog/examples/"$(basename $0)"
+export TMPDIR=/tmp/gtk3dialog/examples/"$(basename $0)"
 mkdir -p "$TMPDIR"
 
 cp no.svg yes.svg "$TMPDIR"/
@@ -51,5 +51,5 @@ export MAIN_DIALOG='
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTKDIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
 esac

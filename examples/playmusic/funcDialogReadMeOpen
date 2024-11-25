@@ -36,7 +36,7 @@ funcDialogReadMeOpen() {
 ' > $TEMP_DIR/dialog_readme
 
 		## Show the dialog and background it.
-		$GTKDIALOG --file=$TEMP_DIR/dialog_readme &
+		$GTK3DIALOG --file=$TEMP_DIR/dialog_readme &
 	fi
 
 	if [ $DEBUG_TRANSITS -ne 0 ]; then echo "$FUNCNAME: OUT"; fi

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
 # Please note that the name of the exported shell variable matches the
 # window widget's variable directive which is a requirement. Not doing
@@ -75,5 +75,5 @@ export winLaunch2
 
 case $1 in
 	-d | --dump) echo "$winMain" "$winLaunch1" "$winLaunch2" ;;
-	*) $GTKDIALOG --program=winMain ;;
+	*) $GTK3DIALOG --program=winMain ;;
 esac
