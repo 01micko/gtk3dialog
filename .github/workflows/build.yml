@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: ["debian:trixie-slim", "ubuntu:noble", "ubuntu:jammy", "ubuntu:focal"]
+        image: ["debian:trixie-slim", "ubuntu:noble", "ubuntu:jammy"]
     container:
       image: ${{ matrix.image }}
     env:
@@ -18,18 +18,16 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update -qq
-        apt-get install -y --no-install-recommends libgtk2.0-dev libgtk-3-dev libvte-dev libvte-2.91-dev libgtk-layer-shell-dev gcc pkg-config bison flex meson autoconf automake make texinfo
+        apt-get install -y --no-install-recommends libgtk-3-dev libnotify-dev libvte-2.91-dev libgtk-layer-shell-dev gcc pkg-config bison flex meson texinfo
     - name: Copy source
       run: |
         cp -r `pwd` ../gtk3-meson
     - name: Meson build
       run: |
-        meson --buildtype=release -Dgtkver=2 build
-        ninja -C build
-        DESTDIR=/tmp/meson-gtk2 ninja -C build install
         cd ../gtk3-meson
-        meson --buildtype=release build
+        meson setup build --buildtype=release -Dgtkver=3
         ninja -C build
+        DESTDIR=/tmp/meson-gtk3 ninja -C build install
         meson configure build -Dbash=true
         ninja -C build
         DESTDIR=/tmp/meson-gtk3 ninja -C build install
