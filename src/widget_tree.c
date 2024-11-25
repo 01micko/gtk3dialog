@@ -1,6 +1,6 @@
 /*
  * widget_tree.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -22,11 +22,8 @@
 /* Includes */
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
-
-#if GTK_CHECK_VERSION(2,4,0)
-
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -244,7 +241,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 	gchar             *string;
 	gchar             *text;
 	gdouble            valdouble;
-	gint               column;
+	//gint               column;
 	gint               index;
 	gint               initialrow;
 	gint               selectionmode;
@@ -306,12 +303,12 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 					case G_TYPE_INT64:
 						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 							index, &valint64, -1);
-						string = g_strdup_printf("%lli", valint64);
+						string = g_strdup_printf("%li", valint64);
 						break;
 					case G_TYPE_UINT64:
 						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 							index, &valuint64, -1);
-						string = g_strdup_printf("%llu", valuint64);
+						string = g_strdup_printf("%lu", valuint64);
 						break;
 					case G_TYPE_DOUBLE:
 						gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
@@ -319,7 +316,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 						string = g_strdup_printf("%f", valdouble);
 						break;
 					default:
-						fprintf(stderr, "%s(): Unsupported column-type %i\n",
+						fprintf(stderr, "%s(): Unsupported column-type %li\n",
 							__func__, coltype);
 						string = g_strdup("");
 				}
@@ -377,12 +374,12 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 				case G_TYPE_INT64:
 					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 						index, &valint64, -1);
-					string = g_strdup_printf("%lli", valint64);
+					string = g_strdup_printf("%li", valint64);
 					break;
 				case G_TYPE_UINT64:
 					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 						index, &valuint64, -1);
-					string = g_strdup_printf("%llu", valuint64);
+					string = g_strdup_printf("%lu", valuint64);
 					break;
 				case G_TYPE_DOUBLE:
 					gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
@@ -390,7 +387,7 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 					string = g_strdup_printf("%f", valdouble);
 					break;
 				default:
-					fprintf(stderr, "%s(): Unsupported column-type %i\n",
+					fprintf(stderr, "%s(): Unsupported column-type %li\n",
 						__func__, coltype);
 					string = g_strdup("");
 			}
@@ -413,8 +410,6 @@ gchar *widget_tree_envvar_construct(GtkWidget *widget)
 void widget_tree_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -464,7 +459,7 @@ void widget_tree_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* We drop all the lines here */
 	/* Thunor: I'd like to stop doing this but some applications (pbackup,
@@ -749,12 +744,12 @@ void widget_tree_save(variable *var)
 						case G_TYPE_INT64:
 							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 								column, &valint64, -1);
-							string = g_strdup_printf("%lli", valint64);
+							string = g_strdup_printf("%li", valint64);
 							break;
 						case G_TYPE_UINT64:
 							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
 								column, &valuint64, -1);
-							string = g_strdup_printf("%llu", valuint64);
+							string = g_strdup_printf("%lu", valuint64);
 							break;
 						case G_TYPE_DOUBLE:
 							gtk_tree_model_get(GTK_TREE_MODEL(model), &iter,
@@ -762,7 +757,7 @@ void widget_tree_save(variable *var)
 							string = g_strdup_printf("%f", valdouble);
 							break;
 						default:
-							fprintf(stderr, "%s(): Unsupported column-type %i\n",
+							fprintf(stderr, "%s(): Unsupported column-type %li\n",
 								__func__, coltype);
 							string = g_strdup("");
 					}
@@ -981,7 +976,7 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 					atoi(column_sizing->line[index]));
 			}
 		}
-		/* Resizeable column? (gtkdialog's default is resizeable) */
+		/* Resizeable column? (gtk3dialog's default is resizeable) */
 		gtk_tree_view_column_set_resizable(column, TRUE);
 		if (column_resizeable && index < column_resizeable->n_lines) {
 			if ((strcasecmp(column_resizeable->line[index], "false") == 0) ||
@@ -1015,11 +1010,11 @@ static GtkWidget *widget_tree_create_tree_view(AttributeSet *Attr,
 					if (function == 1) {
 						gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(store),
 							index + FirstDataColumn, widget_tree_natcmp,
-							(gpointer)(index + FirstDataColumn), NULL);
+							(gpointer)(intptr_t)(index + FirstDataColumn), NULL);
 					} else {
 						gtk_tree_sortable_set_sort_func(GTK_TREE_SORTABLE(store),
 							index + FirstDataColumn, widget_tree_natcasecmp,
-							(gpointer)(index + FirstDataColumn), NULL);
+							(gpointer)(intptr_t)(index + FirstDataColumn), NULL);
 					}
 				} else {
 					fprintf(stderr, "%s(): column-sort-function: natural \
@@ -1161,7 +1156,7 @@ static void widget_tree_input_by_command(variable *var, char *filename,
 								strtod(columns[n], NULL), -1);
 							break;
 						default:
-							fprintf(stderr, "%s(): Unsupported column-type %i\n",
+							fprintf(stderr, "%s(): Unsupported column-type %li\n",
 								__func__, coltype);
 					}
 				}
@@ -1299,7 +1294,7 @@ static void widget_tree_input_by_items(variable *var)
 						strtod(columns[n], NULL), -1);
 					break;
 				default:
-					fprintf(stderr, "%s(): Unsupported column-type %i\n",
+					fprintf(stderr, "%s(): Unsupported column-type %li\n",
 						__func__, coltype);
 			}
 		}
@@ -1412,8 +1407,8 @@ static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	gtk_tree_model_get(model, a, (gint)user_data, &r1, -1);
-	gtk_tree_model_get(model, b, (gint)user_data, &r2, -1);
+	gtk_tree_model_get(model, a, (intptr_t)user_data, &r1, -1);
+	gtk_tree_model_get(model, b, (intptr_t)user_data, &r2, -1);
 
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): r1=\"%s\" r2=\"%s\"\n", __func__, r1, r2);
@@ -1427,5 +1422,3 @@ static gint _widget_tree_natcmp(GtkTreeModel *model, GtkTreeIter *a,
 
 	return retval;
 }
-
-#endif

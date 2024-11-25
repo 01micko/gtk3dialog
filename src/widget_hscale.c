@@ -1,6 +1,6 @@
 /*
  * widget_hscale.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -47,8 +47,6 @@ static void widget_hscale_input_by_items(variable *var);
 
 void widget_hscale_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -99,17 +97,9 @@ GtkWidget *widget_hscale_create(
 	}
 
 	if (Type == WIDGET_HSCALE) {
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
-		widget = gtk_hscale_new_with_range(range_min, range_max, range_step);
-#else
 		widget = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, range_min, range_max, range_step);
-#endif
 	} else {
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
-		widget = gtk_vscale_new_with_range(range_min, range_max, range_step);
-#else
 		widget = gtk_scale_new_with_range(GTK_ORIENTATION_VERTICAL, range_min, range_max, range_step);
-#endif
 	}
 	gtk_range_set_value(GTK_RANGE(widget), range_value);
 
@@ -126,7 +116,7 @@ GtkWidget *widget_hscale_create(
 
 gchar *widget_hscale_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -235,8 +225,6 @@ gchar *widget_hscale_envvar_construct(GtkWidget *widget)
 void widget_hscale_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -265,7 +253,7 @@ void widget_hscale_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -285,9 +273,7 @@ void widget_hscale_refresh(variable *var)
 
 	/* The <item> tags... */
 	if (attributeset_is_avail(var->Attributes, ATTR_ITEM)) {
-#if GTK_CHECK_VERSION(2,16,0)
 		gtk_scale_clear_marks(GTK_SCALE(var->Widget));
-#endif
 		widget_hscale_input_by_items(var);
 	}
 
@@ -330,8 +316,6 @@ void widget_hscale_refresh(variable *var)
 
 void widget_hscale_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -470,7 +454,7 @@ static void widget_hscale_input_by_command(variable *var, char *command)
 #endif
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -508,7 +492,7 @@ static void widget_hscale_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -547,8 +531,6 @@ static void widget_hscale_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if GTK_CHECK_VERSION(2,16,0)
-
 	g_assert(var->Attributes != NULL && var->Widget != NULL);
 
 	text = attributeset_get_first(&element, var->Attributes, ATTR_ITEM);
@@ -569,7 +551,6 @@ static void widget_hscale_input_by_items(variable *var)
 		}
 		text = attributeset_get_next(&element, var->Attributes, ATTR_ITEM);
 	}
-#endif
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);

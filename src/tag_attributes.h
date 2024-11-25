@@ -1,6 +1,6 @@
 /*
  * tag_attributes.h:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2012       Thunor <thunorsif@hotmail.com>
  * 
@@ -24,7 +24,7 @@
 
 #include <gtk/gtk.h>
 #include "attributes.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 
 typedef struct tag_attribute {
 	gchar    *name;

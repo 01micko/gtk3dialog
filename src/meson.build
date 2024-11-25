@@ -1,17 +1,16 @@
 bison = generator(find_program('bison'),
                   output: ['@BASENAME@.c', '@BASENAME@.h'],
-                  arguments: ['@INPUT@', '--defines=@OUTPUT1@', '--output=@OUTPUT0@', '-p', 'gtkdialog_'])
+                  arguments: ['@INPUT@', '--defines=@OUTPUT1@', '--output=@OUTPUT0@', '-p', 'gtk3dialog_'])
 
 flex = generator(find_program('flex'),
                  output: '@BASENAME@.c',
-                 arguments: ['-P', 'gtkdialog_', '-o', '@OUTPUT@', '@INPUT@'])
+                 arguments: ['-P', 'gtk3dialog_', '-o', '@OUTPUT@', '@INPUT@'])
 
 src = [
 	'actions.c',
 	'attributes.c',
 	'automaton.c',
-	'glade_support.c',
-	'gtkdialog.c',
+	'gtk3dialog.c',
 	'printing.c',
 	'scrolling.c',
 	'signals.c',
@@ -23,7 +22,6 @@ src = [
 	'widget_checkbox.c',
 	'widget_chooser.c',
 	'widget_colorbutton.c',
-	'widget_combobox.c',
 	'widget_comboboxtext.c',
 	'widget_edit.c',
 	'widget_entry.c',
@@ -34,7 +32,6 @@ src = [
 	'widget_hbox.c',
 	'widget_hscale.c',
 	'widget_hseparator.c',
-	'widget_list.c',
 	'widget_menubar.c',
 	'widget_menuitem.c',
 	'widget_notebook.c',
@@ -44,7 +41,6 @@ src = [
 	'widgets.c',
 	'widget_spinbutton.c',
 	'widget_statusbar.c',
-	'widget_table.c',
 	'widget_template.c',
 	'widget_terminal.c',
 	'widget_text.c',
@@ -67,11 +63,17 @@ cfg.set_quoted('BUILD_DETAILS', '') # TODO
 
 dep = [gtk, gthread]
 
-if vte.found()
+if get_option('vte') and vte.found()
 	dep += [vte]
 	cfg.set('HAVE_VTE', 1)
 else
 	cfg.set('HAVE_VTE', 0)
+endif
+if  get_option('libnotify') and libnotify.found()
+	dep += [libnotify]
+	cfg.set('HAVE_SYS_INOTIFY_H', 1)
+else
+	cfg.set('HAVE_SYS_INOTIFY_H', 0)
 endif
 if gtkver == 3 and gtk_layer_shell.found()
 	dep += [gtk_layer_shell]
@@ -90,11 +92,13 @@ configure_file(
 	configuration : cfg,
 )
 
-gtkdialog = executable(
-	'gtkdialog',
-	bison.process('gtkdialog_parser.y'),
-	flex.process('gtkdialog_lexer.l'),
+gtk3dialog = executable(
+	'gtk3dialog',
+	bison.process('gtk3dialog_parser.y'),
+	flex.process('gtk3dialog_lexer.l'),
 	src,
+    c_args: ['-DGLIB_DISABLE_DEPRECATION_WARNINGS',
+    '-fgnu89-inline'],
 	dependencies: dep,
 	install: true,
 )

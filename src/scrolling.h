@@ -1,6 +1,6 @@
 /*
  * scrolling.h: miscellaneous functions for scrollable widgets
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2021       step https://github.com/step-
  *
  * This program is free software; you can redistribute it and/or modify

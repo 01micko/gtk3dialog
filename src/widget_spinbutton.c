@@ -1,6 +1,6 @@
 /*
  * widget_spinbutton.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -47,8 +47,6 @@ static void widget_spinbutton_input_by_items(variable *var);
 
 void widget_spinbutton_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -107,7 +105,7 @@ GtkWidget *widget_spinbutton_create(
 
 gchar *widget_spinbutton_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -129,7 +127,7 @@ gchar *widget_spinbutton_envvar_all_construct(variable *var)
 gchar *widget_spinbutton_envvar_construct(GtkWidget *widget)
 {
 	gchar             envvar[32];
-	gchar            *string;
+	gchar            *string = {0};
 	gdouble           value;
 	guint             digits;
 
@@ -213,8 +211,6 @@ gchar *widget_spinbutton_envvar_construct(GtkWidget *widget)
 void widget_spinbutton_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -242,7 +238,7 @@ void widget_spinbutton_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -292,16 +288,10 @@ void widget_spinbutton_refresh(variable *var)
 			G_CALLBACK(on_any_widget_changed_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "activate",
 			G_CALLBACK(on_any_widget_activate_event), (gpointer)var->Attributes);
-#if GTK_CHECK_VERSION(2,16,0)
-		/* Despite what the GTK+ 2 Reference Manual says, I found
-		 * these to be activatable by default. They will actually
-		 * be prefixed with either primary- or secondary- for use
-		 * within action directives */
 		g_signal_connect(G_OBJECT(var->Widget), "icon-press",
 			G_CALLBACK(on_any_widget_icon_press_event), (gpointer)var->Attributes);
 		g_signal_connect(G_OBJECT(var->Widget), "icon-release",
 			G_CALLBACK(on_any_widget_icon_release_event), (gpointer)var->Attributes);
-#endif
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -315,8 +305,6 @@ void widget_spinbutton_refresh(variable *var)
 
 void widget_spinbutton_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -453,7 +441,7 @@ static void widget_spinbutton_input_by_command(variable *var, char *command)
 #endif
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -489,7 +477,7 @@ static void widget_spinbutton_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -517,8 +505,6 @@ static void widget_spinbutton_input_by_file(variable *var, char *filename)
 
 static void widget_spinbutton_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

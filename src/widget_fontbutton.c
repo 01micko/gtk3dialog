@@ -1,6 +1,6 @@
 /*
  * widget_fontbutton.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -46,8 +46,6 @@ static void widget_fontbutton_input_by_items(variable *var);
 
 void widget_fontbutton_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -87,7 +85,7 @@ GtkWidget *widget_fontbutton_create(
 
 gchar *widget_fontbutton_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -118,7 +116,7 @@ gchar *widget_fontbutton_envvar_construct(GtkWidget *widget)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	string = g_strdup(gtk_font_button_get_font_name(GTK_FONT_BUTTON(widget)));
+	string = g_strdup(gtk_font_chooser_get_font(GTK_FONT_CHOOSER(widget)));
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
@@ -134,8 +132,6 @@ gchar *widget_fontbutton_envvar_construct(GtkWidget *widget)
 void widget_fontbutton_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -164,7 +160,7 @@ void widget_fontbutton_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -194,7 +190,7 @@ void widget_fontbutton_refresh(variable *var)
 				__func__);
 		if (attributeset_is_avail(var->Attributes, ATTR_DEFAULT)) {
 			value = attributeset_get_first(&element, var->Attributes, ATTR_DEFAULT);
-			gtk_font_button_set_font_name(GTK_FONT_BUTTON(var->Widget), value);
+			gtk_font_chooser_set_font(GTK_FONT_CHOOSER(var->Widget), value);
 		}
 		if (attributeset_is_avail(var->Attributes, ATTR_HEIGHT))
 			fprintf(stderr, "%s(): <height> not implemented for this widget.\n",
@@ -225,8 +221,6 @@ void widget_fontbutton_refresh(variable *var)
 
 void widget_fontbutton_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -270,7 +264,7 @@ void widget_fontbutton_save(variable *var)
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
 
-			fprintf(outfile, "%s", gtk_font_button_get_font_name(GTK_FONT_BUTTON(var->Widget)));
+			fprintf(outfile, "%s", gtk_font_chooser_get_font(GTK_FONT_CHOOSER(var->Widget)));
 
 			/* Close the file */
 			fclose(outfile);
@@ -306,7 +300,7 @@ static void widget_fontbutton_input_by_command(variable *var, char *command)
 #endif
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -315,7 +309,7 @@ static void widget_fontbutton_input_by_command(variable *var, char *command)
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 
-			gtk_font_button_set_font_name(GTK_FONT_BUTTON(var->Widget), line);
+			gtk_font_chooser_set_font(GTK_FONT_CHOOSER(var->Widget), line);
 
 		}
 		/* Close the file */
@@ -344,7 +338,7 @@ static void widget_fontbutton_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -353,7 +347,7 @@ static void widget_fontbutton_input_by_file(variable *var, char *filename)
 			for (count = strlen(line) - 1; count >= 0; count--)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 
-			gtk_font_button_set_font_name(GTK_FONT_BUTTON(var->Widget), line);
+			gtk_font_chooser_set_font(GTK_FONT_CHOOSER(var->Widget), line);
 
 		}
 		/* Close the file */
@@ -374,8 +368,6 @@ static void widget_fontbutton_input_by_file(variable *var, char *filename)
 
 static void widget_fontbutton_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

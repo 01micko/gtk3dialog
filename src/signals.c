@@ -1,6 +1,6 @@
 /*
  * signals.c:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "actions.h"
 #include "attributes.h"
 #include "signals.h"
@@ -44,14 +44,12 @@
 #include "widget_fontbutton.h"
 #include "widget_frame.h"
 #include "widget_hscale.h"
-#include "widget_list.h"
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
 #include "widget_pixmap.h"
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
-#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -1090,10 +1088,9 @@ void on_any_widget_file_changed_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
 #endif
 {
-#if GTK_CHECK_VERSION(3,0,0)
-	GError   *gerror = NULL;
-#endif
+
 #if HAVE_SYS_INOTIFY_H
+	GError   *gerror = NULL;
 	gchar             buffer[sizeof(struct inotify_event)];
 	variable         *var = (variable*)data;
 #endif
@@ -1147,10 +1144,9 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 	GFile *other_file, GFileMonitorEvent event_type, variable *var)
 #endif
 {
-#if GTK_CHECK_VERSION(3,0,0)
-	GError            *gerror = NULL;
-#endif
+
 #if HAVE_SYS_INOTIFY_H
+	GError            *gerror = NULL;
 	gchar             buffer[sizeof(struct inotify_event)];
 	variable         *var = (variable*)data;
 #endif
@@ -1211,9 +1207,6 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 		case WIDGET_VSCALE:
 			widget_hscale_refresh(var);
 			break;
-		case WIDGET_LIST:
-			widget_list_refresh(var);
-			break;
 		case WIDGET_MENUITEM:
 		case WIDGET_MENU:
 			widget_menuitem_refresh(var);
@@ -1232,9 +1225,6 @@ void on_any_widget_auto_refresh_event(GFileMonitor *monitor, GFile *file,
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_refresh(var);
-			break;
-		case WIDGET_TABLE:
-			widget_table_refresh(var);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_refresh(var);
@@ -1669,7 +1659,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 				variables_export_all();
 
 				/* Opening pipe for reading... */
-				if (infile = widget_opencommand(argument)) {
+				if ((infile = widget_opencommand(argument))) {
 					/* Just one line */
 					if (fgets(line, 64, infile)) {
 						/* Enforce end of string in case of max chars read */
@@ -1705,7 +1695,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 			 ***********************************************************/
 			} else if (condfunc == TYPE_CONDFUNC_FILE) {
 
-				if (infile = fopen(argument, "r")) {
+				if ((infile = fopen(argument, "r"))) {
 					/* Just one line */
 					if (fgets(line, 64, infile)) {
 						/* Enforce end of string in case of max chars read */
@@ -1858,7 +1848,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gchar             wdname[16];
 	gchar            *value;
 	gint              count;
-	gint              fd, wd;
+	gint32            fd, wd;
 	gint              index = 0;
 #if GTK_CHECK_VERSION(3,0,0)
 	GIOChannel       *channel;
@@ -1902,11 +1892,11 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 #endif
 						/* Store fd as a piece of widget data */
 						g_object_set_data(G_OBJECT(var->Widget), fdname,
-							(gpointer)fd);
+							GINT_TO_POINTER(fd));
 
 						/* Store wd as a piece of widget data */
 						g_object_set_data(G_OBJECT(var->Widget), wdname,
-							(gpointer)wd);
+							GINT_TO_POINTER(wd));
 
 						if (!count) {
 							/* Connect to the "changed" signal which will reach
@@ -1930,7 +1920,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 						} else {
 							/* Connect to the "changed" signal which will call
 							 * the widget's refresh function directly without
-							 * being routed through gtkdialog's signal handling
+							 * being routed through gtk3dialog's signal handling
 							 * system and without emitting a signal (it's faster) */
 #if GTK_CHECK_VERSION(3,0,0)
 							if(!(channel = g_io_channel_unix_new(fd))) {
@@ -1972,7 +1962,6 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 	gchar            *value;
 	gint              count;
 	gint              index = 0;
-	gint              fd, wd;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -2037,7 +2026,7 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 						} else {
 							/* Connect to the "changed" signal which will call
 							 * the widget's refresh function directly without
-							 * being routed through gtkdialog's signal handling
+							 * being routed through gtk3dialog's signal handling
 							 * system and without emitting a signal (it's faster) */
 							g_signal_connect(monitor, "changed",
 								G_CALLBACK(on_any_widget_auto_refresh_event),
@@ -2130,7 +2119,6 @@ void on_chooser_widget_current_folder_changed_event(GtkWidget *widget, Attribute
 
 void on_chooser_widget_selection_changed_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	variable        *var   = NULL;
 	static guint32  prev_event_time = 0;
 	guint32         event_time;
 	static gchar    *prev  = NULL;
@@ -2171,7 +2159,6 @@ void on_chooser_widget_selection_changed_event(GtkWidget *widget, AttributeSet *
 
 void on_chooser_widget_update_preview_event(GtkWidget *widget, AttributeSet *Attr)
 {
-	variable        *var   = NULL;
 	static guint32  prev_event_time = 0;
 	guint32         event_time;
 	static gchar    *prev  = NULL;

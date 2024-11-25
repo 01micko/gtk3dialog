@@ -1,6 +1,6 @@
 /*
  * printing.c:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <glib/gprintf.h>
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "printing.h"
 
 /*************************************************************************

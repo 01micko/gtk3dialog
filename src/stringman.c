@@ -1,6 +1,6 @@
 /*
  * stringman.c: Special string maniplutations.
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2012       Thunor <thunorsif@hotmail.com>
  * 
@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <gtk/gtk.h>
 
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "stringman.h"
 #include "widgets.h"
 
@@ -371,7 +371,7 @@ command_get_prefix(const gchar *string,
 	*command = g_strchug(g_strdup(string));
 }
 
-/* Thunor: I saw what technosaurus was doing with GTKDIALOG_PIXMAP_PATH
+/* Thunor: I saw what technosaurus was doing with GTK3DIALOG_PIXMAP_PATH
  * at http://www.murga-linux.com/puppy/viewtopic.php?p=632867#632867
  * and thought it a very good platform independent idea to implement */
 
@@ -380,7 +380,7 @@ char *find_pixmap(char *filename)
 	static gchar retval[512];
 	gchar fullpath[512];
 	gchar **folders;
-	gchar *gtkdialog_pixmap_path;
+	gchar *gtk3dialog_pixmap_path;
 	gint count;
 
 	strcpy(retval, "");	/* Reset the return value */
@@ -391,15 +391,15 @@ char *find_pixmap(char *filename)
 
 	} else {
 
-		/* If the GTKDIALOG_PIXMAP_PATH envvar exists then attempt to find
+		/* If the GTK3DIALOG_PIXMAP_PATH envvar exists then attempt to find
 		 * the file in any one of a number of user defined locations */
-		if ((gtkdialog_pixmap_path = getenv("GTKDIALOG_PIXMAP_PATH"))) {
+		if ((gtk3dialog_pixmap_path = getenv("GTK3DIALOG_PIXMAP_PATH"))) {
 
-			folders = g_strsplit(gtkdialog_pixmap_path, ":", 16);
+			folders = g_strsplit(gtk3dialog_pixmap_path, ":", 16);
 
 #ifdef DEBUG
-			fprintf(stderr, "%s(): gtkdialog_pixmap_path=\"%s\"\n",
-				__func__, gtkdialog_pixmap_path);
+			fprintf(stderr, "%s(): gtk3dialog_pixmap_path=\"%s\"\n",
+				__func__, gtk3dialog_pixmap_path);
 			count = 0;
 			while (folders[count]) {
 				fprintf(stderr, "%s(): folders[%i]=\"%s\"\n", __func__,
@@ -561,7 +561,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					/* Note: All leading zeroes evaluate as 0 */
 					/* This is Unicode safe */
 					c1val = c1val * 10 + *c1 - '0';
-					*c1++;
+					c1++;
 				}
 				c1val += 1000;	/* Add some weight */
 			} else {
@@ -573,7 +573,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					 * and lower case dependent upon locale */
 					c1val = tolower(*c1);
 				}
-				*c1++;
+				c1++;
 			}
 			if ((*c2 >= '0' && *c2 <= '9')) {
 				/* Evaluate consecutive numbers */
@@ -582,7 +582,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					/* Note: All leading zeroes evaluate as 0 */
 					/* This is Unicode safe */
 					c2val = c2val * 10 + *c2 - '0';
-					*c2++;
+					c2++;
 				}
 				c2val += 1000;	/* Add some weight */
 			} else {
@@ -594,7 +594,7 @@ gint strnatcmp(gchar *c1, gchar *c2, gint sensitive)
 					 * and lower case dependent upon locale */
 					c2val = tolower(*c2);
 				}
-				*c2++;
+				c2++;
 			}
 
 			/* At this point both c1 and c2 will be pointing to the next

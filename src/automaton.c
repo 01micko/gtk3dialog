@@ -1,6 +1,6 @@
 /*
  * automaton.c: An automaton executing the program, creating widgets. 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -37,7 +37,7 @@
 #include <gtk/gtk.h>
 
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "widgets.h"
 #include "automaton.h"
 #include "stringman.h"
@@ -47,7 +47,6 @@
 #include "widget_checkbox.h"
 #include "widget_chooser.h"
 #include "widget_colorbutton.h"
-#include "widget_combobox.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
 #include "widget_entry.h"
@@ -58,7 +57,6 @@
 #include "widget_hbox.h"
 #include "widget_hscale.h"
 #include "widget_hseparator.h"
-#include "widget_list.h"
 #include "widget_menubar.h"
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
@@ -67,7 +65,6 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
-#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -114,7 +111,7 @@ void print_command(instruction command)
     int Instr_Code;
     int Widget_Type;
     int Attribute_Number;
-    static AttributeSet *Attr = NULL;
+    //static AttributeSet *Attr = NULL;
 
     Token = command.command;
     Argument = command.argument;
@@ -151,9 +148,6 @@ void print_command(instruction command)
 		case WIDGET_COLORBUTTON:
 			printf("(new colorbutton())");
 			break;
-		case WIDGET_COMBOBOX:
-			printf("(new combobox())");
-			break;
 		case WIDGET_COMBOBOXENTRY:
 			printf("(new comboboxentry())");
 			break;
@@ -186,9 +180,6 @@ void print_command(instruction command)
 			break;
 		case WIDGET_HSEPARATOR:
 			printf("(new hseparator())");
-			break;
-		case WIDGET_LIST:
-			printf("(new list())");
 			break;
 		case WIDGET_MENU:
 			printf("(new menu(pop()))");
@@ -235,11 +226,6 @@ void print_command(instruction command)
 		case WIDGET_TOGGLEBUTTON:
 			printf("(new togglebutton())");
 			break;
-#if GTK_CHECK_VERSION(2,4,0)
-		case WIDGET_TREE:
-			printf("(new tree())");
-			break;
-#endif
 		case WIDGET_VBOX:
 			printf("(new vbox(pop()))");
 			break;
@@ -346,7 +332,7 @@ print_program()
 void run_program()
 {
 	static int        is_launched = 0;
-	int               pc, q;
+	int               pc;
 	stackelement      s;
 	variable         *var;
 	gchar            *progname;
@@ -369,6 +355,8 @@ void run_program()
 	 * the stack which is a window.
 	 */
 	s = pop();
+	if (s.nwidgets <= 0)
+		printf("some error occured: %d\n", s.nwidgets);
 	//gtk_widget_show_all(s.widgets[0]);	Redundant: done manually.
 	widget_show_all();
 
@@ -393,7 +381,8 @@ void run_program()
 		fprintf(stderr, "%s(): program_name=%s variable->Name=%s\n",
 			__func__, progname, var->Name);
 #endif
-		if (var->Name == NULL) {
+		size_t vn = strlen(var->Name);
+		if (vn <= 0) {
 			g_warning("The recently launched window \"%s\" is missing \
 an equivalently named variable directive <variable>%s</variable> which \
 is a requirement of the launch action.", progname, progname);
@@ -666,22 +655,22 @@ instruction_execute(instruction command)
 			    printf("(number '%s')", Argument);
 			    break;
 			case OP_ADD:
-			    printf("(pop() + pop())", Argument);
+			    printf("(pop() + pop()) %s", Argument);
 			    break;
 			case OP_SUBST:
-			    printf("(pop() - pop())", Argument);
+			    printf("(pop() - pop()) %s", Argument);
 			    break;
 			case OP_MULT:
-			    printf("(pop() * pop())", Argument);
+			    printf("(pop() * pop()) %s", Argument);
 			    break;
 			case OP_DIV:
-			    printf("(pop() / pop())", Argument);
+			    printf("(pop() / pop()) %s", Argument);
 			    break;
 			case REL_EQ:
-			    printf("(pop() = pop())", Argument);
+			    printf("(pop() = pop()) %s", Argument);
 			    break;
 			case REL_NE:
-			    printf("(pop() != pop())", Argument);
+			    printf("(pop() != pop()) %s", Argument);
 			    break;
 			default:
 			    printf("(Unknown Parameter: %d)", Widget_Type);
@@ -721,14 +710,12 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 	gint              height = -1;
 	gint              hscrollbar_policy = GTK_POLICY_AUTOMATIC;
 	gint              vscrollbar_policy = GTK_POLICY_AUTOMATIC;
+#if HAVE_VTE
 	gint              xpad;
 	gint              ypad;
 	glong             char_height;
 	glong             char_width;
-#if HAVE_VTE
-#if VTE_CHECK_VERSION(0,30,0)
 	GtkBorder         padding;
-#endif
 #endif
 
 	g_assert(widget != NULL);
@@ -760,9 +747,9 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 		case WIDGET_TEXT:
 			/* Get dimensions from custom tag attributes */
 			if (attr) {
-				if (value = get_tag_attribute(attr, "width"))
+				if ((value = get_tag_attribute(attr, "width")))
 					width = atoi(value);
-				if (value = get_tag_attribute(attr, "height"))
+				if ((value = get_tag_attribute(attr, "height")))
 					height = atoi(value);
 			}
 			/* Set some defaults */
@@ -772,8 +759,10 @@ static GtkWidget *put_in_the_scrolled_window(GtkWidget *widget,
 			/* gtk_widget_set_usize(scrolledwindow, width, height);	Redundant */
 			gtk_widget_set_size_request(scrolledwindow, width, height);
 			/* Pack the widget */
-			gtk_scrolled_window_add_with_viewport(
-				GTK_SCROLLED_WINDOW(scrolledwindow), widget);
+			//gtk_scrolled_window_add_with_viewport(
+			//	GTK_SCROLLED_WINDOW(scrolledwindow), widget);
+			gtk_container_add(
+				GTK_CONTAINER(scrolledwindow), widget);
 			break;
 		case WIDGET_TERMINAL:
 #if HAVE_VTE
@@ -824,12 +813,12 @@ padding.top=%i padding.bottom=%i\n", __func__, padding.left,
 			/* gtk_widget_set_usize(scrolledwindow, width, height);	Redundant */
 			gtk_widget_set_size_request(scrolledwindow, width, height);
 			/* Pack the widget */
-			if (Type == WIDGET_LIST || Type == WIDGET_TERMINAL) {
-				gtk_scrolled_window_add_with_viewport(
-					GTK_SCROLLED_WINDOW(scrolledwindow), widget);
-			} else {
+			//if (Type == WIDGET_LIST || Type == WIDGET_TERMINAL) {
+				//gtk_scrolled_window_add_with_viewport(
+					//GTK_SCROLLED_WINDOW(scrolledwindow), widget);
+			//} else {
 				gtk_container_add(GTK_CONTAINER(scrolledwindow), widget);
-			}
+			//}
 			break;
 	}
 
@@ -837,7 +826,7 @@ padding.top=%i padding.bottom=%i\n", __func__, padding.left,
 	 * but for the viewport it's GTK_SHADOW_IN which should be modifiable */
 	/* Get shadow-type */
 	if (attr) {
-		if (value = get_tag_attribute(attr, "shadow-type")) {
+		if ((value = get_tag_attribute(attr, "shadow-type"))) {
 			parent = gtk_widget_get_parent(widget);
 			if (GTK_IS_VIEWPORT(parent)) {
 				gtk_viewport_set_shadow_type(GTK_VIEWPORT(parent), atoi(value));
@@ -973,15 +962,15 @@ instruction_execute_push(
 		AttributeSet  *Attr,
 		tag_attr      *tag_attributes)
 {
-	GList            *accel_group = NULL;
+	//GList            *accel_group = NULL;
 	GList            *element;
 	GtkWidget        *scrolled_window = NULL;
 	GtkWidget        *Widget = NULL;
 	gchar            *value;
-	gint              Widget_Type, n, border_width;
-	gint              original_expand, original_fill;
-	gint              space_expand, space_fill;
-	variable         *var;
+	gint              Widget_Type; //, n, border_width;
+	//gint              original_expand, original_fill;
+	//gint              space_expand;
+	//variable         *var;
 
 	PIP_DEBUG("token: %d", Token);
 	
@@ -1006,17 +995,8 @@ instruction_execute_push(
 			Widget = widget_colorbutton_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;
-#if !GTK_CHECK_VERSION(3,0,0)
-		case WIDGET_COMBOBOX:
-			Widget = widget_combobox_create(Attr, tag_attributes, Widget_Type);
-			push_widget(Widget, Widget_Type);
-			break;
-#endif
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
-#if GTK_CHECK_VERSION(3,0,0)
-		case WIDGET_COMBOBOX:
-#endif
 			Widget = widget_comboboxtext_create(Attr, tag_attributes, Widget_Type);
 			push_widget(Widget, Widget_Type);
 			break;

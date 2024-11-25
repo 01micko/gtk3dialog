@@ -1,6 +1,6 @@
 /*
  * widget_menuitem.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -57,8 +57,6 @@ static void widget_menuitem_input_by_items(variable *var);
 
 void widget_menuitem_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -74,16 +72,16 @@ void widget_menuitem_clear(variable *var)
 /***********************************************************************
  * Create                                                              *
  ***********************************************************************/
-
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GtkWidget *widget_menu_create(
 	AttributeSet *Attr, tag_attr *attr, gint Type)
 {
-	GList            *element;
+	//GList            *element;
 	GtkAccelGroup    *accel_group;
 	GtkWidget        *menu;
 	GtkWidget        *menuitems;
 	GtkWidget        *widget;
-	gchar            *label;
+	//gchar            *label;
 	gint              n;
 	stackelement      s;
 
@@ -147,7 +145,7 @@ GtkWidget *widget_menuitem_create(
 	GdkPixbuf        *pixbuf;
 	GError           *error = NULL;
 	GList            *element;
-	GtkAccelGroup    *accel_group = NULL;
+	//GtkAccelGroup    *accel_group = NULL;
 	GtkIconTheme     *icon_theme;
 	GtkWidget        *image;
 	GtkWidget        *widget;
@@ -409,7 +407,7 @@ GtkWidget *widget_menuitem_create(
 
 gchar *widget_menuitem_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -465,8 +463,6 @@ gchar *widget_menuitem_envvar_construct(GtkWidget *widget)
 void widget_menuitem_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -499,7 +495,7 @@ void widget_menuitem_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* tag_attr="value"... */
 	/* Only image menuitems from file support this.
@@ -628,8 +624,6 @@ void widget_menuitem_refresh(variable *var)
 
 void widget_menuitem_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -720,7 +714,7 @@ static void widget_menuitem_input_by_command(variable *var, char *command)
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
 
 		/* Opening pipe for reading... */
-		if (infile = widget_opencommand(command)) {
+		if ((infile = widget_opencommand(command))) {
 			/* Just one line */
 			if ((fgets(line, 512, infile))) {
 				/* Enforce end of string in case of max chars read */
@@ -773,7 +767,7 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 	/* Only checkbox and radiobutton menuitems support this */
 	if (GTK_IS_CHECK_MENU_ITEM(var->Widget)) {
 
-		if (infile = fopen(filename, "r")) {
+		if ((infile = fopen(filename, "r"))) {
 			/* Just one line */
 			if ((fgets(line, 512, infile))) {
 				/* Enforce end of string in case of max chars read */
@@ -815,8 +809,6 @@ static void widget_menuitem_input_by_file(variable *var, char *filename)
 
 static void widget_menuitem_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -828,3 +820,4 @@ static void widget_menuitem_input_by_items(variable *var)
 	fprintf(stderr, "%s(): Exiting.\n", __func__);
 #endif
 }
+G_GNUC_END_IGNORE_DEPRECATIONS

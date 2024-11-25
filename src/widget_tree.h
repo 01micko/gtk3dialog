@@ -1,6 +1,6 @@
 /*
  * widget_tree.h: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -22,8 +22,6 @@
 #ifndef WIDGET_TREE_H
 #define WIDGET_TREE_H
 
-#if GTK_CHECK_VERSION(2,4,0)
-
 /* Function prototypes */
 void widget_tree_clear(variable *var);
 GtkWidget *widget_tree_create(
@@ -35,7 +33,5 @@ void widget_tree_fileselect(
 void widget_tree_refresh(variable *var);
 void widget_tree_removeselected(variable *var);
 void widget_tree_save(variable *var);
-
-#endif
 
 #endif

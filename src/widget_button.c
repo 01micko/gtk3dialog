@@ -1,6 +1,6 @@
 /*
  * widget_button.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -50,8 +50,6 @@ static void widget_button_input_by_items(variable *var);
 
 void widget_button_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -120,9 +118,10 @@ GtkWidget *widget_button_create(
 		if (info) gtk_icon_info_free(info);
 	}
 #endif
-
+	G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	switch (Type) {
 		case WIDGET_CANCELBUTTON:
+			G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 			widget = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
 			attributeset_set_if_unset(Attr, ATTR_LABEL, "Cancel");
 			break;
@@ -384,7 +383,7 @@ GtkWidget *widget_button_create(
 			}
 			break;
 	}
-
+	G_GNUC_END_IGNORE_DEPRECATIONS
 	/* This widget has one or more children which require registering */
 	widget_visibility_list_add(boxouter, attr);
 	widget_visibility_list_add(box, attr);
@@ -404,7 +403,7 @@ GtkWidget *widget_button_create(
 
 gchar *widget_button_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -455,8 +454,6 @@ gchar *widget_button_envvar_construct(GtkWidget *widget)
 void widget_button_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -486,7 +483,7 @@ void widget_button_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -570,8 +567,6 @@ void widget_button_refresh(variable *var)
 
 void widget_button_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -657,7 +652,7 @@ static void widget_button_input_by_command(variable *var, char *command)
 
 	if (var->Type == WIDGET_TOGGLEBUTTON) {
 		/* Opening pipe for reading... */
-		if (infile = widget_opencommand(command)) {
+		if ((infile = widget_opencommand(command))) {
 			/* Just one line */
 			if (fgets(line, 512, infile)) {
 				/* Enforce end of string in case of max chars read */
@@ -759,8 +754,6 @@ static void widget_button_input_by_file(variable *var, char *filename)
 
 static void widget_button_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

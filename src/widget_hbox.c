@@ -1,6 +1,6 @@
 /*
  * widget_hbox.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -47,8 +47,6 @@ static void widget_hbox_input_by_items(variable *var);
 
 void widget_hbox_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -83,12 +81,9 @@ GtkWidget *widget_hbox_create(
 	/* The spacing value here is the GtkBox "spacing" property
 	 * and therefore can be overridden with a spacing="0" tag
 	 * attribute*/
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Deprecated in gtk3 so I've added the newly recommended equivalent */
-	widget = gtk_hbox_new(FALSE, 5);
-#else
+
 	widget = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	gtk_box_set_homogeneous(GTK_BOX(widget), FALSE);
-#endif
 
 	if (attr &&
 		(value = get_tag_attribute(attr, "margin"))) {	/* Deprecated */
@@ -177,7 +172,7 @@ GtkWidget *widget_hbox_create(
 
 gchar *widget_hbox_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -202,7 +197,7 @@ gchar *widget_hbox_envvar_all_construct(variable *var)
 
 gchar *widget_hbox_envvar_construct(GtkWidget *widget)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -224,8 +219,6 @@ gchar *widget_hbox_envvar_construct(GtkWidget *widget)
 void widget_hbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -253,7 +246,7 @@ void widget_hbox_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -300,8 +293,6 @@ void widget_hbox_refresh(variable *var)
 
 void widget_hbox_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -321,8 +312,6 @@ void widget_hbox_removeselected(variable *var)
 
 void widget_hbox_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -341,8 +330,6 @@ void widget_hbox_save(variable *var)
 
 static void widget_hbox_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -361,8 +348,6 @@ static void widget_hbox_input_by_command(variable *var, char *command)
 
 static void widget_hbox_input_by_file(variable *var, char *filename)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -381,8 +366,6 @@ static void widget_hbox_input_by_file(variable *var, char *filename)
 
 static void widget_hbox_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

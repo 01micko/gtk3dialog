@@ -1,6 +1,6 @@
 /*
  * tag_attributes.c:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2012       Thunor <thunorsif@hotmail.com>
  * 
@@ -24,7 +24,7 @@
 #endif
 
 #include <string.h>
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "tag_attributes.h"
 
@@ -42,7 +42,7 @@ extern gboolean option_no_warning;
 static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 {
 	GParamSpec       *paramspec;
-	gint              n = 0;
+	//gint              n = 0;
 
 	g_assert(nameval != NULL && GTK_IS_WIDGET(widget));
 
@@ -71,7 +71,7 @@ static gboolean try_set_property(GtkWidget *widget, namevalue  *nameval)
 		return FALSE;
 	}
 	
-	if (!paramspec->flags & G_PARAM_WRITABLE) {
+	if (!paramspec->flags && G_PARAM_WRITABLE) {
 		if (!option_no_warning)
 			g_warning("%s(): Property '%s' is not writable.", 
 				__func__, nameval->name);

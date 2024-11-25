@@ -1,6 +1,6 @@
 /*
  * variables.c:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -20,14 +20,13 @@
  */
 
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "variables.h"
 #include "widgets.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
 #include "widget_chooser.h"
 #include "widget_colorbutton.h"
-#include "widget_combobox.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
 #include "widget_entry.h"
@@ -38,7 +37,6 @@
 #include "widget_hbox.h"
 #include "widget_hscale.h"
 #include "widget_hseparator.h"
-#include "widget_list.h"
 #include "widget_menubar.h"
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
@@ -47,7 +45,6 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
-#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -382,9 +379,6 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_fileselect(toset, name, value);
 			break;
-		case WIDGET_COMBOBOX:
-			widget_combobox_fileselect(toset, name, value);
-			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_fileselect(toset, name, value);
@@ -418,9 +412,6 @@ variable *variables_set_value(const char *name, const char *value)
 		case WIDGET_VSEPARATOR:
 			widget_hseparator_fileselect(toset, name, value);
 			break;
-		case WIDGET_LIST:
-			widget_list_fileselect(toset, name, value);
-			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_fileselect(toset, name, value);
 			break;
@@ -446,9 +437,6 @@ variable *variables_set_value(const char *name, const char *value)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_fileselect(toset, name, value);
-			break;
-		case WIDGET_TABLE:
-			widget_table_fileselect(toset, name, value);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_fileselect(toset, name, value);
@@ -512,9 +500,6 @@ variable *variables_save(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_save(var);
 			break;
-		case WIDGET_COMBOBOX:
-			widget_combobox_save(var);
-			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_save(var);
@@ -548,9 +533,6 @@ variable *variables_save(const char *name)
 		case WIDGET_VSEPARATOR:
 			widget_hseparator_save(var);
 			break;
-		case WIDGET_LIST:
-			widget_list_save(var);
-			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_save(var);
 			break;
@@ -576,9 +558,6 @@ variable *variables_save(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_save(var);
-			break;
-		case WIDGET_TABLE:
-			widget_table_save(var);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_save(var);
@@ -632,7 +611,7 @@ variable *variables_refresh(const char *name)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* If the custom attribute "block-function-signals" is true
 	 * then block signals whilst performing this function */
@@ -661,9 +640,6 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_refresh(var);
-			break;
-		case WIDGET_COMBOBOX:
-			widget_combobox_refresh(var);
 			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
@@ -698,9 +674,6 @@ variable *variables_refresh(const char *name)
 		case WIDGET_VSEPARATOR:
 			widget_hseparator_refresh(var);
 			break;
-		case WIDGET_LIST:
-			widget_list_refresh(var);
-			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_refresh(var);
 			break;
@@ -726,9 +699,6 @@ variable *variables_refresh(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_refresh(var);
-			break;
-		case WIDGET_TABLE:
-			widget_table_refresh(var);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_refresh(var);
@@ -1061,21 +1031,23 @@ int _tree_insert(variable *new, variable *actual)
 		exit(EXIT_FAILURE);
 	}
 
-	if (compare < 0)
+	if (compare < 0) {
 		if (actual->left == NULL) {
 			actual->left = new;
 			return (0);
 		} else {
 			return (_tree_insert(new, actual->left));
 		}
-
-	if (compare > 0)
+	}
+	if (compare > 0) {
 		if (actual->right == NULL) {
 			actual->right = new;
 			return (0);
 		} else {
 			return (_tree_insert(new, actual->right));
 		}
+	}
+	return (0);
 }
 
 /***********************************************************************
@@ -1098,17 +1070,21 @@ static variable *_tree_find(const char *name, variable *actual)
 	if (compare == 0)
 		return (actual);
 
-	if (compare < 0)
-		if (actual->left != NULL)
+	if (compare < 0) {
+		if (actual->left != NULL) {
 			return _tree_find(name, actual->left);
-		else
+		} else {
 			return NULL;
-
-	if (compare > 0)
-		if (actual->right != NULL)
+		}
+	}
+	if (compare > 0) {
+		if (actual->right != NULL) {
 			return _tree_find(name, actual->right);
-		else
+		} else {
 			return NULL;
+		}
+	}
+	return NULL;
 }
 
 /***********************************************************************
@@ -1153,12 +1129,12 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 {
 	gint              index = 0;
 #if HAVE_SYS_INOTIFY_H
-	gchar             fdname[16];
-	gchar             wdname[16];
+	gchar             fdname[22];
+	gchar             wdname[22];
 	gint              fd, wd;
 #else
 	GFileMonitor     *monitor;
-	gchar             name[16];
+	gchar             name[20];
 #endif
 
 #ifdef DEBUG
@@ -1210,9 +1186,9 @@ void variables_drop_by_window_id(variable *actual, gint window_id)
 					sprintf(wdname, "_inotifywd%i", index);
 					if ((g_object_get_data(G_OBJECT(actual->Widget), fdname)) &&
 						(g_object_get_data(G_OBJECT(actual->Widget), wdname))) {
-						fd = (gint)g_object_get_data(G_OBJECT(actual->Widget),
+						fd = (intptr_t)g_object_get_data(G_OBJECT(actual->Widget),
 							fdname);
-						wd = (gint)g_object_get_data(G_OBJECT(actual->Widget),
+						wd = (intptr_t)g_object_get_data(G_OBJECT(actual->Widget),
 							wdname);
 #ifdef DEBUG
 						fprintf(stderr, "%s(): fd=%i wd=%i\n", __func__,
@@ -1313,13 +1289,6 @@ void variables_initialize_all(void)
  ***********************************************************************/
 static void _variables_initialize(variable *actual)
 {
-	GList *element;
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
-	char *socket_id;
-#endif
-	char command[128];
-	int result;
-
 #ifdef DEBUG
 	fprintf(stderr, "%s: Start.\n", __func__);
 	fflush(stderr);
@@ -1332,23 +1301,6 @@ static void _variables_initialize(variable *actual)
 
 	if (actual->left != NULL)
 		_variables_initialize(actual->left);
-
-#if !GTK_CHECK_VERSION(3,0,0)	/* gtk3: Redundant: WIDGET_GVIM is being purged */
-	if (actual->Widget != NULL && actual->Type == WIDGET_GVIM) {
-		gtk_widget_show(actual->Widget);
-		socket_id = attributeset_get_first(&element, actual->Attributes,
-			ATTR_SOCKET);
-		//printf("----->%p\n", actual->Widget->window); 
-		//printf("----->%x\n", atoi(socket_id));        
-		if (socket_id != NULL) {
-			sprintf(command, "gvim --socketid %s &",
-				socket_id);
-			result = system(command);
-		} else {
-			yywarning("Socket ID is NULL\n");
-		}
-	}
-#endif
 
 	if (actual->right != NULL)
 		_variables_initialize(actual->right);
@@ -1437,58 +1389,6 @@ static void _variables_export(variable *actual)
 		 * Initially it may have been practicable with simple dialogs to
 		 * dump the entire contents of a widget on every signal, but it
 		 * definitely isn't anymore */
-#if 0
-		//
-		// To export all of the elements in the list
-		//
-		switch (actual->Type) {
-			case WIDGET_LIST:
-				line = g_strdup_printf("%s_ALL=\"", actual->Name);
-				itemlist = GTK_LIST(actual->Widget)->children;
-				n = 0;
-				while (itemlist != NULL) {
-					/* Thunor: Well, here's the bug that was making the
-					 * list widget hang: I think it was assumed that the
-					 * continue instruction was being placed inside the
-					 * nonexistent 'if' block.	Redundant: Bug
-					if (itemlist->data == NULL) 
-						itemlist = itemlist->next;
-						continue; */
-					if (itemlist->data != NULL) {
-						text = gtk_object_get_user_data(itemlist->data);
-						if (n == 0)
-							tmp = g_strconcat(line, "'", text, "'", NULL);
-						else
-							tmp = g_strconcat(line, " '", text, "'", NULL);
-						g_free(line);
-						line = tmp;
-						++n;
-					}
-					itemlist = itemlist->next;
-				}
-				putenv(line);
-				break;
-
-			case WIDGET_TABLE:
-				tmp = widget_table_envvar_all_construct(actual);
-				putenv(tmp);
-				break;
-
-#if GTK_CHECK_VERSION(2,4,0)
-			case WIDGET_TREE:
-				tmp = widget_tree_envvar_all_construct(actual);
-				putenv(tmp);
-				break;
-#endif
-
-			case WIDGET_COMBOBOXENTRY:
-			case WIDGET_COMBOBOXTEXT:
-				tmp = widget_comboboxtext_envvar_all_construct(actual);
-				putenv(tmp);
-				break;
-		}
-#endif
-
 	}
 
 	if (actual->right != NULL)
@@ -1550,57 +1450,6 @@ void print_variables(variable *actual)
 		if (value == NULL)
 			value = "";
 		printf("%s=\"%s\"\n", actual->Name, value);
-
-		/* Thunor: I've disabled this for performance reasons. Zigbert was
-		 * experiencing terrible table performance which I've tested too.
-		 * Initially it may have been practicable with simple dialogs to
-		 * dump the entire contents of a widget on every signal, but it
-		 * definitely isn't anymore */
-#if 0
-		//
-		// To print all of the elements in the list
-		//
-		switch (actual->Type) {
-			case WIDGET_LIST:
-				n = 0;
-				printf("%s_ALL=\"", actual->Name);
-				itemlist = GTK_LIST(actual->Widget)->children;
-				while (itemlist != NULL) {
-					if (itemlist->data == NULL)
-						goto next_item;
-					if (n == 0)
-						printf("'%s'", (char*)gtk_object_get_user_data (itemlist->data));
-					else
-						printf(" '%s'", (char*)gtk_object_get_user_data (itemlist->data));
-next_item:
-					itemlist = itemlist->next;
-					++n;
-				}
-				printf("\"\n");
-				break;
-
-			case WIDGET_TABLE:
-				tmp = widget_table_envvar_all_construct(actual);
-				g_printf("%s", tmp);
-				g_free(tmp);
-				break;
-
-#if GTK_CHECK_VERSION(2,4,0)
-			case WIDGET_TREE:
-				tmp = widget_tree_envvar_all_construct(actual);
-				g_printf("%s", tmp);
-				g_free(tmp);
-				break;
-#endif
-
-			case WIDGET_COMBOBOXENTRY:
-			case WIDGET_COMBOBOXTEXT:
-				tmp = widget_comboboxtext_envvar_all_construct(actual);
-				g_printf("%s", tmp);
-				g_free(tmp);
-				break;
-		}
-#endif
 
 	}
 
@@ -1733,9 +1582,6 @@ variable *variables_clear(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_clear(toclear);
 			break;
-		case WIDGET_COMBOBOX:
-			widget_combobox_clear(toclear);
-			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_clear(toclear);
@@ -1769,9 +1615,6 @@ variable *variables_clear(const char *name)
 		case WIDGET_VSEPARATOR:
 			widget_hseparator_clear(toclear);
 			break;
-		case WIDGET_LIST:
-			widget_list_clear(toclear);
-			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_clear(toclear);
 			break;
@@ -1797,9 +1640,6 @@ variable *variables_clear(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_clear(toclear);
-			break;
-		case WIDGET_TABLE:
-			widget_table_clear(toclear);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_clear(toclear);
@@ -1883,9 +1723,6 @@ int remove_selected_variable(const char *name)
 		case WIDGET_COLORBUTTON:
 			widget_colorbutton_removeselected(toclear);
 			break;
-		case WIDGET_COMBOBOX:
-			widget_combobox_removeselected(toclear);
-			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			widget_comboboxtext_removeselected(toclear);
@@ -1919,9 +1756,6 @@ int remove_selected_variable(const char *name)
 		case WIDGET_VSEPARATOR:
 			widget_hseparator_removeselected(toclear);
 			break;
-		case WIDGET_LIST:
-			widget_list_removeselected(toclear);
-			break;
 		case WIDGET_MENUBAR:
 			widget_menubar_removeselected(toclear);
 			break;
@@ -1947,9 +1781,6 @@ int remove_selected_variable(const char *name)
 			break;
 		case WIDGET_STATUSBAR:
 			widget_statusbar_removeselected(toclear);
-			break;
-		case WIDGET_TABLE:
-			widget_table_removeselected(toclear);
 			break;
 		case WIDGET_TERMINAL:
 			widget_terminal_removeselected(toclear);

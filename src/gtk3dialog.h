@@ -1,5 +1,5 @@
 /*
- * stack.h:
+ * gtk3dialog.h:
  * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
@@ -19,32 +19,47 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MYSTACK_H
-#define MYSTACK_H
-#include <stdio.h>
+#ifndef GTK3DIALOG_H
+#define GTK3DIALOG_H
+
+#define _GNU_SOURCE
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <locale.h>
 #include <gtk/gtk.h>
-#include "gtk3dialog.h"
+#include "variables.h"
+#include "automaton.h"
 
-/* This value represents the maximum number of widgets that one individual
- * stackelement can contain, so it can be viewed as widgets per container */
-#define MAXWIDGETS 256
+#define PRG_UNKNOWN 0
+#define PRG_MEMORY  1
+#define PRG_STDIN   2
+#define PRG_FILE    3
 
-/* 
- * The elements in stack can contain MAXWIDGETS number of widgets.
- *
- */
-typedef struct _stackelement {
-	gchar       *cval;
-	int          nwidgets;
-	GtkWidget   *widgets[MAXWIDGETS];
-	int          widgettypes[MAXWIDGETS];
-} stackelement;
+#define GTKD_FUNCTION_SIGNALS_BLOCK (function_signals_block++)
+#define GTKD_FUNCTION_SIGNALS_UNBLOCK (function_signals_block--)
+#define GTKD_FUNCTION_SIGNALS_RESET (function_signals_block = FALSE)
 
-stackelement pop();
-void push(stackelement a);
-void show_without_pop(GtkWidget *window);
+#ifndef GTK3DIALOG_NO_EXTERN
+extern gint function_signals_block;
 
+extern gint project_space_expand;
+extern gint project_space_fill;
+
+extern GtkWidget *lastradiowidget;
+
+extern GList *accel_groups;
+
+extern GList *widget_hide_list, *widget_show_list;
+
+extern gint window_id;
 #endif
 
+void reset_program_source(void);
+//Redundant: gint set_program_source(gchar *name);
+void get_program_from_variable(gchar *name);
+void set_program_name(gchar *name);
+gchar *get_program_name(void);
+void load_styles_file(gchar *filename);
+
+#endif

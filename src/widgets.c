@@ -1,6 +1,6 @@
 /*
  * widgets.c: Widget manipulation functions
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -33,14 +33,13 @@
 
 #include <gtk/gtk.h>
 #include <math.h>
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "widgets.h"
 #include "stringman.h"
 #include "widget_button.h"
 #include "widget_checkbox.h"
 #include "widget_chooser.h"
 #include "widget_colorbutton.h"
-#include "widget_combobox.h"
 #include "widget_comboboxtext.h"
 #include "widget_edit.h"
 #include "widget_entry.h"
@@ -51,7 +50,6 @@
 #include "widget_hbox.h"
 #include "widget_hscale.h"
 #include "widget_hseparator.h"
-#include "widget_list.h"
 #include "widget_menubar.h"
 #include "widget_menuitem.h"
 #include "widget_notebook.h"
@@ -60,7 +58,6 @@
 #include "widget_radiobutton.h"
 #include "widget_spinbutton.h"
 #include "widget_statusbar.h"
-#include "widget_table.h"
 #include "widget_terminal.h"
 #include "widget_text.h"
 #include "widget_timer.h"
@@ -114,10 +111,6 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			string = widget_colorbutton_envvar_construct(widget);
 			return string;
 			break;
-		case WIDGET_COMBOBOX:
-			string = widget_combobox_envvar_construct(widget);
-			return string;
-			break;
 		case WIDGET_COMBOBOXENTRY:
 		case WIDGET_COMBOBOXTEXT:
 			string = widget_comboboxtext_envvar_construct(widget);
@@ -161,10 +154,6 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			string = widget_hseparator_envvar_construct(widget);
 			return string;
 			break;
-		case WIDGET_LIST:
-			string = widget_list_envvar_construct(widget);
-			return string;
-			break;
 		case WIDGET_MENUBAR:
 			string = widget_menubar_envvar_construct(widget);
 			return string;
@@ -199,10 +188,6 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			string = widget_statusbar_envvar_construct(widget);
 			return string;
 			break;
-		case WIDGET_TABLE:
-			string = widget_table_envvar_construct(widget);
-			return string;
-			break;
 		case WIDGET_TERMINAL:
 			string = widget_terminal_envvar_construct(widget);
 			return string;
@@ -215,12 +200,10 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			string = widget_timer_envvar_construct(widget);
 			return string;
 			break;
-#if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_TREE:
 			string = widget_tree_envvar_construct(widget);
 			return string;
 			break;
-#endif
 		case WIDGET_VBOX:
 			string = widget_vbox_envvar_construct(widget);
 			return string;
@@ -229,16 +212,10 @@ char *widget_get_text_value(GtkWidget *widget, int type)
 			string = widget_window_envvar_construct(widget);
 			return string;
 			break;
-
-
-#if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_CHOOSER:
 			string = widget_chooser_envvar_construct(widget);
 			return string;
 			break;
-#endif
-
-
 		default:
 			return NULL;
 	}
@@ -308,9 +285,6 @@ char *widgets_to_str(int itype)
 		case WIDGET_COLORBUTTON:
 			type = "COLORBUTTON";
 			break;
-		case WIDGET_COMBOBOX:
-			type = "COMBOBOX";
-			break;
 		case WIDGET_COMBOBOXENTRY:
 			type = "COMBOBOXENTRY";
 			break;
@@ -344,9 +318,6 @@ char *widgets_to_str(int itype)
 		case WIDGET_HSEPARATOR:
 			type = "HSEPARATOR";
 			break;
-		case WIDGET_LIST:
-			type = "LIST";
-			break;
 		case WIDGET_MENU:
 			type = "MENU";
 			break;
@@ -377,9 +348,6 @@ char *widgets_to_str(int itype)
 		case WIDGET_STATUSBAR:
 			type = "STATUSBAR";
 			break;
-		case WIDGET_TABLE:
-			type = "TABLE";
-			break;
 		case WIDGET_TERMINAL:
 			type = "TERMINAL";
 			break;
@@ -392,11 +360,9 @@ char *widgets_to_str(int itype)
 		case WIDGET_TOGGLEBUTTON:
 			type = "TOGGLEBUTTON";
 			break;
-#if GTK_CHECK_VERSION(2,4,0)
 		case WIDGET_TREE:
 			type = "TREE";
 			break;
-#endif
 		case WIDGET_VBOX:
 			type = "VBOX";
 			break;
@@ -409,13 +375,11 @@ char *widgets_to_str(int itype)
 		case WIDGET_WINDOW:
 			type = "WINDOW";
 			break;
-
-
-	case WIDGET_SCROLLEDW:
-		type = "SCROLLEDW";
-		break;
-	default:
-		type = "THINGY";
+		case WIDGET_SCROLLEDW:
+			type = "SCROLLEDW";
+			break;
+		default:
+			type = "THINGY";
 	}
 	return (type);
 }

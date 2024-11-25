@@ -1,6 +1,6 @@
 /*
  * widget_eventbox.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -47,8 +47,6 @@ static void widget_eventbox_input_by_items(variable *var);
 
 void widget_eventbox_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -94,7 +92,7 @@ GtkWidget *widget_eventbox_create(
 
 gchar *widget_eventbox_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -141,8 +139,6 @@ gchar *widget_eventbox_envvar_construct(GtkWidget *widget)
 void widget_eventbox_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -170,7 +166,7 @@ void widget_eventbox_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -223,8 +219,6 @@ void widget_eventbox_refresh(variable *var)
 
 void widget_eventbox_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -250,13 +244,12 @@ void widget_eventbox_save(variable *var)
 	gboolean          visible_window;
 	gchar            *act;
 	gchar            *filename = NULL;
-	gchar             string[32];
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if 0	/* Pointless since loading doesn't work at run-time */
+	/* Pointless since loading doesn't work at run-time */
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -271,7 +264,7 @@ void widget_eventbox_save(variable *var)
 	 * widget's data to it */
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
-
+			gchar string[32];
 			above_child = gtk_event_box_get_above_child(GTK_EVENT_BOX(var->Widget));
 			if (above_child) {
 				strcpy(string, "true");
@@ -295,7 +288,7 @@ void widget_eventbox_save(variable *var)
 	} else {
 		fprintf(stderr, "%s(): No <output file> directive found.\n", __func__);
 	}
-#endif
+
 
 	fprintf(stderr, "%s(): Save not implemented for this widget.\n", __func__);
 
@@ -310,8 +303,6 @@ void widget_eventbox_save(variable *var)
 
 static void widget_eventbox_input_by_command(variable *var, char *command)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -339,8 +330,8 @@ static void widget_eventbox_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-#if 0	/* At run-time this has no effect -- shame */
-	if (infile = fopen(filename, "r")) {
+	/* At run-time this has no effect -- shame */
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -403,7 +394,7 @@ fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
 		fprintf(stderr, "%s(): Couldn't open '%s' for reading.\n", __func__,
 			filename);
 	}
-#endif
+
 
 	fprintf(stderr, "%s(): <input file> not implemented for this widget.\n", __func__);
 
@@ -418,8 +409,6 @@ fprintf(stderr, "%s(): setting count=%i FALSE\n", __func__, count);
 
 static void widget_eventbox_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
