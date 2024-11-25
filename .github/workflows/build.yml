@@ -22,8 +22,6 @@ jobs:
     - name: Copy source
       run: |
         cp -r `pwd` ../gtk3-meson
-        cp -r `pwd` ../gtk3-autotools
-        cp -r `pwd` ../gtk2-autotools
     - name: Meson build
       run: |
         meson --buildtype=release -Dgtkver=2 build
@@ -35,13 +33,3 @@ jobs:
         meson configure build -Dbash=true
         ninja -C build
         DESTDIR=/tmp/meson-gtk3 ninja -C build install
-    - name: Autotools build
-      run: |
-        cd ../gtk2-autotools
-        ./autogen.sh --prefix=/usr
-        make -j`nproc`
-        DESTDIR=/tmp/autotools-gtk2 make install
-        cd ../gtk3-autotools
-        ./autogen.sh --prefix=/usr --enable-gtk3
-        make -j`nproc`
-        DESTDIR=/tmp/autotools-gtk3 make install
