@@ -1,6 +1,6 @@
 /*
  * widget_comboboxtext.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -309,7 +309,7 @@ void widget_comboboxtext_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* We'll manage signals ourselves */
 	GTKD_FUNCTION_SIGNALS_BLOCK;
@@ -688,7 +688,7 @@ static void widget_comboboxtext_input_by_command(variable *var, char *command)
 #endif
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -728,7 +728,7 @@ static void widget_comboboxtext_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Read the file one line at a time (trailing [CR]LFs are read too) */
 		while (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */

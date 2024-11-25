@@ -1,6 +1,6 @@
 /*
  * widget_window.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -26,7 +26,7 @@
 #if HAVE_GTK_LAYER_SHELL
 #include <gtk-layer-shell.h>
 #endif
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -58,8 +58,6 @@ static void widget_window_input_by_items(variable *var);
 
 void widget_window_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -100,6 +98,8 @@ GtkWidget *widget_window_create(
 #if HAVE_GTK_LAYER_SHELL
 	if (!attr)
 		goto layer_set;
+	
+	gushort mar = 20;
 	
 	if (getenv("GDK_BACKEND") && strcmp(getenv("GDK_BACKEND"), "wayland") != 0)
 		goto layer_set;
@@ -153,6 +153,15 @@ GtkWidget *widget_window_create(
 			g_warning("%s(): Unknown edge %s.", __func__, value); 
 	}
 	
+	value = get_tag_attribute(attr, "dist");
+	if (value) {
+		mar = atoi(value);
+		if ((mar < 0) || (mar > 200)) {
+			g_warning("%s(): Margin out of range %s. Setting default.", __func__, value);
+			mar = 20;
+		}
+	}
+	
 	if ((layer != GTK_LAYER_SHELL_LAYER_ENTRY_NUMBER) ||
 		(edge != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER)  ||
 		(corner != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER)) {
@@ -163,10 +172,10 @@ GtkWidget *widget_window_create(
 	}
 	if (edge != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
 		gtk_layer_set_exclusive_zone (GTK_WINDOW(widget), 0);
-		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_LEFT, 20);
-		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_RIGHT, 20);
-		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_TOP, 10);
-		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_BOTTOM, 20);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_LEFT, mar);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_RIGHT, mar);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_TOP, mar);
+		gtk_layer_set_margin(GTK_WINDOW(widget), GTK_LAYER_SHELL_EDGE_BOTTOM, mar);
 		gtk_layer_set_anchor(GTK_WINDOW(widget), edge, TRUE);
 		if (corner != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
 			gtk_layer_set_anchor(GTK_WINDOW(widget), corner, TRUE);
@@ -178,7 +187,7 @@ layer_set:
 
 	/* app id and theme window/taskbar icon */
 	if (attr) {
-		if (value = get_tag_attribute(attr, "icon-name")) {
+		if ((value = get_tag_attribute(attr, "icon-name"))) {
 			gtk_window_set_icon_name(GTK_WINDOW(widget), value);
 			g_set_prgname(value);
 		}
@@ -250,7 +259,7 @@ layer_set:
 
 gchar *widget_window_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -307,8 +316,6 @@ gchar *widget_window_envvar_construct(GtkWidget *widget)
 void widget_window_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -336,7 +343,7 @@ void widget_window_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -393,8 +400,6 @@ void widget_window_refresh(variable *var)
 
 void widget_window_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -472,7 +477,7 @@ static void widget_window_input_by_command(variable *var, char *command)
 #endif
 
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -510,7 +515,7 @@ static void widget_window_input_by_file(variable *var, char *filename)
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -540,8 +545,6 @@ static void widget_window_input_by_file(variable *var, char *filename)
 
 static void widget_window_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

@@ -1,6 +1,6 @@
 /*
  * widget_progressbar.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -67,8 +67,6 @@ void widget_progressbar_realized_callback(GtkWidget *widget, AttributeSet *Attr)
 
 void widget_progressbar_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -118,7 +116,7 @@ GtkWidget *widget_progressbar_create(
 
 gchar *widget_progressbar_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -165,8 +163,6 @@ gchar *widget_progressbar_envvar_construct(GtkWidget *widget)
 void widget_progressbar_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -195,7 +191,7 @@ void widget_progressbar_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -252,8 +248,6 @@ void widget_progressbar_refresh(variable *var)
 
 void widget_progressbar_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -273,8 +267,6 @@ void widget_progressbar_removeselected(variable *var)
 
 void widget_progressbar_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -310,8 +302,6 @@ static void widget_progressbar_input_by_command(variable *var, char *command)
 
 static void widget_progressbar_input_by_file(variable *var, char *filename)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -330,8 +320,6 @@ static void widget_progressbar_input_by_file(variable *var, char *filename)
 
 static void widget_progressbar_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -348,7 +336,7 @@ static void widget_progressbar_input_by_items(variable *var)
  * Some stuff to handle progress bars                                  *
  ***********************************************************************/
 /* Thunor: This simply executed all actions when the progressbar reached
- * 100 so I've fixed that by routing it through gtkdialog's normal signal
+ * 100 so I've fixed that by routing it through gtk3dialog's normal signal
  * handling system and the default signal is now "time-out" */
 
 static void widget_progressbar_perform_actions(progr_descr *descr)
@@ -396,7 +384,9 @@ static gpointer widget_progressbar_thread_entry(progr_descr *descr)
 		/*
 		 * Entering critical region.
 		 */
+		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 		gdk_threads_enter();
+		G_GNUC_END_IGNORE_DEPRECATIONS
 		/*
 		 * Updating the screen, for this we need a progress bar.
 		 */
@@ -435,7 +425,9 @@ static gpointer widget_progressbar_thread_entry(progr_descr *descr)
 		/*
 		 * Leaving critical region.
 		 */
+		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 		gdk_threads_leave();
+		G_GNUC_END_IGNORE_DEPRECATIONS
 
 		if (descr->widget == NULL)
 			break;

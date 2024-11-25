@@ -1,6 +1,6 @@
 /*
  * widget_colorbutton.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "attributes.h"
 #include "automaton.h"
 #include "widgets.h"
@@ -37,6 +37,7 @@
 static void widget_colorbutton_input_by_command(variable *var, char *command);
 static void widget_colorbutton_input_by_file(variable *var, char *filename);
 static void widget_colorbutton_input_by_items(variable *var);
+static int hex_to_dec(char c);
 
 /* Notes: */
 
@@ -46,8 +47,6 @@ static void widget_colorbutton_input_by_items(variable *var);
 
 void widget_colorbutton_clear(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -82,12 +81,34 @@ GtkWidget *widget_colorbutton_create(
 }
 
 /***********************************************************************
+ * Convert hexadecimal to decimal value                                *
+ ***********************************************************************/
+ 
+ /**
+ * Thanks to @johanmalm Johan Malm
+ * https://github.com/labwc/labwc/blob/master/src/theme.c
+ */
+static int hex_to_dec(char c)
+{
+	if (c >= '0' && c <= '9') {
+		return c - '0';
+	}
+	if (c >= 'a' && c <= 'f') {
+		return c - 'a' + 10;
+	}
+	if (c >= 'A' && c <= 'F') {
+		return c - 'A' + 10;
+	}
+	return 0;
+}
+
+/***********************************************************************
  * Environment Variable All Construct                                  *
  ***********************************************************************/
 
 gchar *widget_colorbutton_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -108,39 +129,41 @@ gchar *widget_colorbutton_envvar_all_construct(variable *var)
 
 gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 {
-	GdkColor          color;
-	gchar             envvar[32];
+	GdkRGBA           color;
+	gchar             envvar[64];
 	gchar            *string;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
-	gtk_color_button_get_color(GTK_COLOR_BUTTON(widget), &color);
+	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(widget), &color);
 
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): color.red  =#%04x  rgb=%02x\n", __func__,
-		color.red, (color.red + 257 / 2) / 257);
+		color.red, (color.red);
 	fprintf(stderr, "%s(): color.green=#%04x  rgb=%02x\n", __func__,
-		color.green, (color.green + 257 / 2) / 257);
+		color.green, (color.green);
 	fprintf(stderr, "%s(): color.blue =#%04x  rgb=%02x\n", __func__,
-		color.blue, (color.blue + 257 / 2) / 257);
+		color.blue, (color.blue);
+	fprintf(stderr, "%s(): color.alpha =#%04x  rgb=%02x\n", __func__,
+		color.alpha, (color.alpha);
 #endif
-
-	if (gtk_color_button_get_use_alpha(GTK_COLOR_BUTTON(widget))) {
-		sprintf(envvar, "#%02x%02x%02x|%u",
-			(color.red + 257 / 2) / 257,
-			(color.green + 257 / 2) / 257,
-			(color.blue + 257 / 2) / 257,
-			gtk_color_button_get_alpha(GTK_COLOR_BUTTON(widget)));
-
+	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(widget), &color);
+	if (gtk_color_chooser_get_use_alpha(GTK_COLOR_CHOOSER(widget))) {
+		sprintf(envvar, "#%02x%02x%02x|%02x",
+			(guint)(color.red * 255),
+			(guint)(color.green * 255),
+			(guint)(color.blue * 255),
+			(guint)(color.alpha * 255));
 	} else {
-		sprintf(envvar, "#%02x%02x%02x",
-			(color.red + 257 / 2) / 257,
-			(color.green + 257 / 2) / 257,
-			(color.blue + 257 / 2) / 257);
+		sprintf(envvar, "#%02x%02x%02x|%02x",
+			(guint)(color.red * 255),
+			(guint)(color.green * 255),
+			(guint)(color.blue * 255),
+			(guint)(1.0 * 255));
 	}
-
+	//printf("env: %s\n",envvar);
 	string = g_strdup(envvar);
 
 #ifdef DEBUG_TRANSITS
@@ -157,8 +180,6 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 void widget_colorbutton_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -176,12 +197,15 @@ void widget_colorbutton_fileselect(
  ***********************************************************************/
 void widget_colorbutton_refresh(variable *var)
 {
-	GdkColor          color;
+	GdkRGBA           color;
 	GList            *element;
 	gchar            *act;
 	gint              initialised = FALSE;
-	guint             alpha;
+	const gchar      *a = {0};
+	const gchar      *rgba_in = {0};
 	list_t           *values = NULL;
+	gint              a_len;
+	gchar             in_color[32] = {0}; 
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -189,7 +213,7 @@ void widget_colorbutton_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -222,24 +246,46 @@ void widget_colorbutton_refresh(variable *var)
 			values = linecutter(g_strdup(attributeset_get_first(&element,
 				var->Attributes, ATTR_DEFAULT)), '|');
 			if (values->n_lines > 0) {
-				/* Parse the RGB value to create the necessary GdkColor.
+				/* Parse the RGB value to create the necessary GdkRGBA.
 				 * This function doesn't like trailing whitespace so it
-				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_color_parse(g_strstrip(values->line[0]), &color)) {
+				 * needs to be stripped first with g_strstrip() */
+				rgba_in = g_strdup(g_strstrip(values->line[0]));
+				if (values->n_lines > 1) {
+					a = g_strdup(g_strstrip(values->line[1]));
+					/* If we have alpha we need to convert the whole
+					 * rgba_in string var to rgba(uint,uint,uint,double)
+					 * as gdk_rgba_parse() only accepts hex in the form
+					 * of #abc #aabbcc, #aaabbbccc or #aaaabbbbcccc,
+					 * but we are only going to support the most common
+					 * variant of hex notation. This is kindof weird because
+					 * a GdkRGBA type is the same as cairo,
+					 * rgba(double,double,double,double)
+					 */
+					/* convert to css style rgba() */
+					guint r = (hex_to_dec(rgba_in[1]) * 16 + hex_to_dec(rgba_in[2]));
+					guint g = (hex_to_dec(rgba_in[3]) * 16 + hex_to_dec(rgba_in[4]));
+					guint b = (hex_to_dec(rgba_in[5]) * 16 + hex_to_dec(rgba_in[6]));
+					float rgbf = 1.0;
+					a_len = strlen(a);
+					if (a_len == 2) { /* parse the #aabbcc|dd notion */
+						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 255.0;
+					} else { /* parse the old 0 - 65535 notion */
+						rgbf = atof(a) / 256 / 256;
+					}
+					gint ret = snprintf(in_color, sizeof(in_color), "rgba(%d, %d, %d, %f)", r, g, b, rgbf );
+					if (ret <= 0) {
+						fprintf(stderr, "%s:() valid alpha found\n", a);
+					}
+					if (gdk_rgba_parse(&color, in_color)) {
+						gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+					}
+				} else {
+				if (gdk_rgba_parse(&color, rgba_in)) {
 #ifdef DEBUG_CONTENT
 					fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
-					gtk_color_button_set_color(GTK_COLOR_BUTTON(var->Widget), &color);
-				}
-			}
-			if (values->n_lines > 1) {
-				/* Read alpha as an unsigned decimal integer */
-				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
-					/* This requires use-alpha="true" */
-					gtk_color_button_set_alpha(GTK_COLOR_BUTTON(var->Widget), alpha);
+						gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+					}
 				}
 			}
 			/* Free linecutter memory */
@@ -261,7 +307,6 @@ void widget_colorbutton_refresh(variable *var)
 		/* Connect signals */
 		g_signal_connect(G_OBJECT(var->Widget), "color-set",
 			G_CALLBACK(on_any_widget_color_set_event), (gpointer)var->Attributes);
-
 	}
 
 #ifdef DEBUG_TRANSITS
@@ -275,8 +320,6 @@ void widget_colorbutton_refresh(variable *var)
 
 void widget_colorbutton_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -297,7 +340,7 @@ void widget_colorbutton_removeselected(variable *var)
 void widget_colorbutton_save(variable *var)
 {
 	FILE             *outfile;
-	GdkColor          color;
+	GdkRGBA           color;
 	GList            *element;
 	gchar            *act;
 	gchar            *filename = NULL;
@@ -305,7 +348,6 @@ void widget_colorbutton_save(variable *var)
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
-
 	/* We'll use the output file filename if available */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_OUTPUT);
 	while (act) {
@@ -320,19 +362,20 @@ void widget_colorbutton_save(variable *var)
 	 * widget's data to it */
 	if (filename) {
 		if ((outfile = fopen(filename, "w"))) {
-			gtk_color_button_get_color(GTK_COLOR_BUTTON(var->Widget), &color);
-			if (gtk_color_button_get_use_alpha(GTK_COLOR_BUTTON(var->Widget))) {
-				fprintf(outfile, "#%02x%02x%02x|%u",
-					(color.red + 257 / 2) / 257,
-					(color.green + 257 / 2) / 257,
-					(color.blue + 257 / 2) / 257,
-					gtk_color_button_get_alpha(GTK_COLOR_BUTTON(var->Widget)));
+			gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+			if (gtk_color_chooser_get_use_alpha(GTK_COLOR_CHOOSER(var->Widget))) {	
+				fprintf(outfile, "#%02x%02x%02x|%02x",
+					(guint)(color.red * 255),
+					(guint)(color.green * 255),
+					(guint)(color.blue * 255),
+					(guint)(color.alpha * 255));
 
 			} else {
-				fprintf(outfile, "#%02x%02x%02x",
-					(color.red + 257 / 2) / 257,
-					(color.green + 257 / 2) / 257,
-					(color.blue + 257 / 2) / 257);
+				fprintf(outfile, "#%02x%02x%02x|%02x",
+					(guint)(color.red * 255),
+					(guint)(color.green * 255),
+					(guint)(color.blue * 255),
+					(guint)(1.0 * 255));
 			}
 			/* Close the file */
 			fclose(outfile);
@@ -356,11 +399,14 @@ void widget_colorbutton_save(variable *var)
 static void widget_colorbutton_input_by_command(variable *var, char *command)
 {
 	FILE             *infile;
-	GdkColor          color;
+	GdkRGBA           color;
 	list_t           *values = NULL;
 	gchar             line[512];
+	const gchar      *rgba_in = {0};    
 	gint              count;
-	guint             alpha;
+	const gchar      *a = {0};
+	gint              a_len;
+	gchar             in_color[32] = {0}; 
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -369,9 +415,8 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 #ifdef DEBUG_CONTENT
 	fprintf(stderr, "%s(): command: '%s'\n", __func__, command);
 #endif
-
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -381,24 +426,46 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 			values = linecutter(g_strdup(line), '|');
 			if (values->n_lines > 0) {
-				/* Parse the RGB value to create the necessary GdkColor.
+				/* Parse the RGB value to create the necessary GdkRGBA.
 				 * This function doesn't like trailing whitespace so it
-				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_color_parse(g_strstrip(values->line[0]), &color)) {
+				 * needs to be stripped first with g_strstrip() */
+				rgba_in = g_strdup(g_strstrip(values->line[0]));
+				if (values->n_lines > 1) {
+					a = g_strdup(g_strstrip(values->line[1]));
+					/* If we have alpha we need to convert the whole
+					 * rgba_in string var to rgba(uint,uint,uint,double)
+					 * as gdk_rgba_parse() only accepts hex in the form
+					 * of #abc #aabbcc, #aaabbbccc or #aaaabbbbcccc,
+					 * but we are only going to support the most common
+					 * variant of hex notation. This is kindof weird because
+					 * a GdkRGBA type is the same as cairo,
+					 * rgba(double,double,double,double)
+					 */
+					/* convert to css style rgba() */
+					guint r = (hex_to_dec(rgba_in[1]) * 16 + hex_to_dec(rgba_in[2]));
+					guint g = (hex_to_dec(rgba_in[3]) * 16 + hex_to_dec(rgba_in[4]));
+					guint b = (hex_to_dec(rgba_in[5]) * 16 + hex_to_dec(rgba_in[6]));
+					float rgbf = 1.0;
+					a_len = strlen(a);
+					if (a_len == 2) { /* parse the #aabbcc|dd notion */
+						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 255.0;
+					} else { /* parse the old 0 - 65535 notion */
+						rgbf = atof(a) / 256 / 256;
+					}
+					gint ret = snprintf(in_color, sizeof(in_color), "rgba(%d, %d, %d, %f)", r, g, b, rgbf );
+					if (ret <= 0) {
+						fprintf(stderr, "%s:() valid alpha found\n", a);
+					}
+					if (gdk_rgba_parse(&color, in_color)) {
+						gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+					}
+				} else {
+				if (gdk_rgba_parse(&color, rgba_in)) {
 #ifdef DEBUG_CONTENT
 					fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
-					gtk_color_button_set_color(GTK_COLOR_BUTTON(var->Widget), &color);
-				}
-			}
-			if (values->n_lines > 1) {
-				/* Read alpha as an unsigned decimal integer */
-				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
-					/* This requires use-alpha="true" */
-					gtk_color_button_set_alpha(GTK_COLOR_BUTTON(var->Widget), alpha);
+						gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+					}
 				}
 			}
 			/* Free linecutter memory */
@@ -423,17 +490,19 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 static void widget_colorbutton_input_by_file(variable *var, char *filename)
 {
 	FILE             *infile;
-	GdkColor          color;
+	GdkRGBA           color;
 	list_t           *values = NULL;
 	gchar             line[512];
+	const gchar      *rgba_in = {0};    
 	gint              count;
-	guint             alpha;
+	const gchar      *a = {0};
+	gint              a_len;
+	gchar             in_color[32] = {0}; 
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
-
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Just one line */
 		if (fgets(line, 512, infile)) {
 			/* Enforce end of string in case of max chars read */
@@ -443,24 +512,46 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 				if (line[count] == 13 || line[count] == 10) line[count] = 0;
 			values = linecutter(g_strdup(line), '|');
 			if (values->n_lines > 0) {
-				/* Parse the RGB value to create the necessary GdkColor.
+				/* Parse the RGB value to create the necessary GdkRGBA..
 				 * This function doesn't like trailing whitespace so it
-				 * needs to be stripped first with g_strstrip() */ 
-				if (gdk_color_parse(g_strstrip(values->line[0]), &color)) {
+				 * needs to be stripped first with g_strstrip() */
+				rgba_in = g_strdup(g_strstrip(values->line[0]));
+				if (values->n_lines > 1) {
+					a = g_strdup(g_strstrip(values->line[1]));
+					/* If we have alpha we need to convert the whole
+					 * rgba_in string var to rgba(uint,uint,uint,double)
+					 * as gdk_rgba_parse() only accepts hex in the form
+					 * of #abc #aabbcc, #aaabbbccc or #aaaabbbbcccc,
+					 * but we are only going to support the most common
+					 * variant of hex notation. This is kindof weird because
+					 * a GdkRGBA type is the same as cairo,
+					 * rgba(double,double,double,double)
+					 */
+					/* convert to css style rgba() */
+					guint r = (hex_to_dec(rgba_in[1]) * 16 + hex_to_dec(rgba_in[2]));
+					guint g = (hex_to_dec(rgba_in[3]) * 16 + hex_to_dec(rgba_in[4]));
+					guint b = (hex_to_dec(rgba_in[5]) * 16 + hex_to_dec(rgba_in[6]));
+					float rgbf = 1.0;
+					a_len = strlen(a);
+					if (a_len == 2) { /* parse the #aabbcc|dd notion */
+						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 255.0;
+					} else { /* parse the old 0 - 65535 notion */
+						rgbf = atof(a) / 256 / 256;
+					}
+					gint ret = snprintf(in_color, sizeof(in_color), "rgba(%d, %d, %d, %f)", r, g, b, rgbf );
+					if (ret <= 0) {
+						fprintf(stderr, "%s:() valid alpha found\n", a);
+					}
+					if (gdk_rgba_parse(&color, in_color)) {
+						gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+					}
+				} else {
+				if (gdk_rgba_parse(&color, rgba_in)) {
 #ifdef DEBUG_CONTENT
 					fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
-					gtk_color_button_set_color(GTK_COLOR_BUTTON(var->Widget), &color);
-				}
-			}
-			if (values->n_lines > 1) {
-				/* Read alpha as an unsigned decimal integer */
-				if (sscanf(values->line[1], "%u", &alpha) == 1) {
-#ifdef DEBUG_CONTENT
-					fprintf(stderr, "%s:() valid alpha=%u found\n", __func__, alpha);
-#endif
-					/* This requires use-alpha="true" */
-					gtk_color_button_set_alpha(GTK_COLOR_BUTTON(var->Widget), alpha);
+						gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(var->Widget), &color);
+					}
 				}
 			}
 			/* Free linecutter memory */
@@ -484,8 +575,6 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 
 static void widget_colorbutton_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

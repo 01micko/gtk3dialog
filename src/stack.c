@@ -1,6 +1,6 @@
 /*
  * stack.c:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2012       Thunor <thunorsif@hotmail.com>
  * 
@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "stack.h"
 
 /* This value represents the maximum number of stackelements that the
@@ -106,13 +106,14 @@ stackelement pop(void)
 
 void show_without_pop(GtkWidget *window)
 {
-	GtkWidget *parent;
+	//GtkWidget *parent;
 	stackelement *current;
 	g_assert(window != NULL);
 	g_assert(sp != 0);
 
 	current = stack + (sp - 1);
-	parent = gtk_widget_get_parent(current->widgets[0]);
+	//parent = gtk_widget_get_parent(current->widgets[0]);
+	gtk_widget_get_parent(current->widgets[0]);
 	//gtk_widget_reparent(current->widgets[0], window);
 	g_message("sp = %d nwidgets = %d", sp, current->nwidgets);
 	gtk_container_add(GTK_CONTAINER(window), current->widgets[0]);

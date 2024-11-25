@@ -1,6 +1,6 @@
 /*
  * widget_terminal.c: 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -23,7 +23,7 @@
 #define _GNU_SOURCE
 #include <gtk/gtk.h>
 #include "config.h"
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "widget_terminal.h"
 #include "attributes.h"
 #include "automaton.h"
@@ -39,7 +39,7 @@
 //#define DEBUG_TRANSITS
 
 #define VTE_WARNING "The terminal (VteTerminal) widget requires \
-a version of gtkdialog built with libvte."
+a version of gtk3dialog built with libvte."
 
 /* Local function prototypes, located at file bottom */
 static void widget_terminal_input_by_command(variable *var, char *command);
@@ -70,15 +70,8 @@ void widget_terminal_clear(variable *var)
 }
 
 #if HAVE_VTE
-#if GTK_CHECK_VERSION(3,0,0) && VTE_CHECK_VERSION(0,37,0) /* vte2 9894a095df */
 #define GDK_COLOR_TYPE GdkRGBA
 #define GDK_COLOR_PARSE(A, B)	gdk_rgba_parse((B), g_strstrip((A)))
-
-#else
-
-#define GDK_COLOR_TYPE GdkColor
-#define GDK_COLOR_PARSE(A, B)	gdk_color_parse(g_strstrip((A)), (B))
-#endif
 #endif
 
 /***********************************************************************
@@ -95,9 +88,8 @@ GtkWidget *widget_terminal_create(
 	gchar            *value;
 	gint              width = -1, height = -1;
 
-#if VTE_CHECK_VERSION(0,38,0)
+
 	PangoFontDescription *fontdesc;
-#endif
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -126,38 +118,20 @@ GtkWidget *widget_terminal_create(
 		 * widget_set_tag_attributes() will try to set it later */
 		strcpy(tagattribute, "font-desc");
 		if ((value = get_tag_attribute(attr, tagattribute))) {
-#if VTE_CHECK_VERSION(0,38,0)
+
 			fontdesc = pango_font_description_from_string (value);
 			vte_terminal_set_font(VTE_TERMINAL(widget), fontdesc);
-#else
-			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
-#endif
+
 			kill_tag_attribute(attr, tagattribute);
 		}
 
-#if ! VTE_CHECK_VERSION(0,38,0)
-		/* Again, "background-tint-color" requires a pointer to a
-		 * GdkColor struct but we can convert a string like "#ff00ff" */
-		strcpy(tagattribute, "background-tint-color");
-		if ((value = get_tag_attribute(attr, tagattribute))) {
-			if (GDK_COLOR_PARSE(value, &color)) {
 #ifdef DEBUG_CONTENT
 				fprintf(stderr, "%s:() valid colour found\n", __func__);
 #endif
-				vte_terminal_set_background_tint_color(VTE_TERMINAL(widget), &color);
-			}
-			kill_tag_attribute(attr, tagattribute);
-		}
-#endif
-
 		/* Get custom tag attribute "font-name" */
 		if ((value = get_tag_attribute(attr, "font-name"))) {
-#if VTE_CHECK_VERSION(0,38,0)
 			fontdesc = pango_font_description_from_string (value);
 			vte_terminal_set_font(VTE_TERMINAL(widget), fontdesc);
-#else
-			vte_terminal_set_font_from_string(VTE_TERMINAL(widget), value);
-#endif
 		}
 
 		/* Get custom tag attribute "text-background-color" */
@@ -190,18 +164,6 @@ GtkWidget *widget_terminal_create(
 			}
 		}
 
-#if ! VTE_CHECK_VERSION(0,38,0)
-		/* Get custom tag attribute "dim-foreground-color" */
-		if ((value = get_tag_attribute(attr, "dim-foreground-color"))) {
-			if (GDK_COLOR_PARSE(value, &color)) {
-#ifdef DEBUG_CONTENT
-				fprintf(stderr, "%s:() valid colour found\n", __func__);
-#endif
-				vte_terminal_set_color_dim(VTE_TERMINAL(widget), &color);
-			}
-		}
-#endif
-
 		/* Get custom tag attribute "cursor-background-color" */
 		if ((value = get_tag_attribute(attr, "cursor-background-color"))) {
 			if (GDK_COLOR_PARSE(value, &color)) {
@@ -221,8 +183,6 @@ GtkWidget *widget_terminal_create(
 				vte_terminal_set_color_highlight(VTE_TERMINAL(widget), &color);
 			}
 		}
-
-#if VTE_CHECK_VERSION(0,43,1) /* vte2 b921f1a59 */
 		/* Get custom tag attribute "highlight-foreground-color" */
 		if ((value = get_tag_attribute(attr, "highlight-foreground-color"))) {
 			if (GDK_COLOR_PARSE(value, &color)) {
@@ -232,7 +192,6 @@ GtkWidget *widget_terminal_create(
 				vte_terminal_set_color_highlight_foreground(VTE_TERMINAL(widget), &color);
 			}
 		}
-#endif
 	}
 
 	/* Set width and height if both supplied */
@@ -266,13 +225,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 	gchar            *value;
 	gchar            *working_directory = NULL;
 	gint              count;
-#if VTE_CHECK_VERSION(0,26,0)
-	gboolean          retval;
 	GError           *error = NULL;
-	GPid              pid;
-#else
-	pid_t             pid;
-#endif
 #endif
 
 #ifdef DEBUG_TRANSITS
@@ -318,9 +271,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 		__func__, envv, *envv, envv[0], envv[1]);
 #endif
 
-#if VTE_CHECK_VERSION(0,26,0)
-#if VTE_CHECK_VERSION(0,38,0)
-	retval = (vte_terminal_spawn_sync(VTE_TERMINAL(widget),
+	vte_terminal_spawn_async(VTE_TERMINAL(widget),
 		VTE_PTY_DEFAULT,
 		working_directory,
 		argv,
@@ -328,43 +279,14 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 		G_SPAWN_SEARCH_PATH,
 		NULL,
 		NULL,
-		&pid,
 		NULL,
-		&error));
-	if (!retval)
-		fprintf(stderr, "%s(): vte_terminal_spawn_sync(): %s\n",
-			__func__, error->message);
-#else
-	retval = (vte_terminal_fork_command_full(VTE_TERMINAL(widget),
-		VTE_PTY_DEFAULT,
-		working_directory,
-		argv,
-		envv,
-		G_SPAWN_SEARCH_PATH,
+		-1,
 		NULL,
 		NULL,
-		&pid,
-		&error));
-	if (!retval)
-		fprintf(stderr, "%s(): vte_terminal_fork_command_full(): %s\n",
-			__func__, error->message);
-#endif
-#else
-	pid = (vte_terminal_fork_command(VTE_TERMINAL(widget),
-		argv[0],
-		argv,
-		envv,
-		working_directory,
-		TRUE,
-		TRUE,
-		TRUE));
-	if (pid == -1)
-		fprintf(stderr, "%s(): vte_terminal_fork_command(): %s\n",
-			__func__, "error");
-#endif
+		&error);
 
 	/* Store "pid" as a piece of widget data (recreated if exists)  */
-	g_object_set_data(G_OBJECT(widget), "_pid", (gpointer)pid);
+	//g_object_set_data(G_OBJECT(widget), "_pid", (gpointer)(intptr_t)pid);
 
 #endif
 
@@ -379,7 +301,7 @@ void widget_terminal_fork_command(GtkWidget *widget, tag_attr *attr)
 
 gchar *widget_terminal_envvar_all_construct(variable *var)
 {
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -407,14 +329,14 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 #if HAVE_VTE
 	gchar             envvar[32];
 #endif
-	gchar            *string;
+	gchar            *string = {0};
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
 #endif
 
 #if HAVE_VTE
-	sprintf(envvar, "%i", (gint)g_object_get_data(G_OBJECT(widget), "_pid"));
+	sprintf(envvar, "%li", (intptr_t)g_object_get_data(G_OBJECT(widget), "_pid"));
 	string = g_strdup(envvar);
 #else
 	string = g_strdup("");
@@ -434,8 +356,6 @@ gchar *widget_terminal_envvar_construct(GtkWidget *widget)
 void widget_terminal_fileselect(
 	variable *var, const char *name, const char *value)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -463,7 +383,7 @@ void widget_terminal_refresh(variable *var)
 
 	/* Get initialised state of widget */
 	if (g_object_get_data(G_OBJECT(var->Widget), "_initialised") != NULL)
-		initialised = (gint)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
+		initialised = (intptr_t)g_object_get_data(G_OBJECT(var->Widget), "_initialised");
 
 	/* The <input> tag... */
 	act = attributeset_get_first(&element, var->Attributes, ATTR_INPUT);
@@ -519,8 +439,6 @@ void widget_terminal_refresh(variable *var)
 
 void widget_terminal_removeselected(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -540,8 +458,6 @@ void widget_terminal_removeselected(variable *var)
 
 void widget_terminal_save(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);
@@ -576,7 +492,7 @@ static void widget_terminal_input_by_command(variable *var, char *command)
 
 #if HAVE_VTE
 	/* Opening pipe for reading... */
-	if (infile = widget_opencommand(command)) {
+	if ((infile = widget_opencommand(command))) {
 		/* Read the file one line at a time */
 		while (fgets(line, 512, infile)) {
 			g_string_append(text, line);
@@ -615,7 +531,7 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 #endif
 
 #if HAVE_VTE
-	if (infile = fopen(filename, "r")) {
+	if ((infile = fopen(filename, "r"))) {
 		/* Read the file one line at a time */
 		while (fgets(line, 512, infile)) {
 			g_string_append(text, line);
@@ -643,8 +559,6 @@ static void widget_terminal_input_by_file(variable *var, char *filename)
 
 static void widget_terminal_input_by_items(variable *var)
 {
-	gchar            *var1;
-	gint              var2;
 
 #ifdef DEBUG_TRANSITS
 	fprintf(stderr, "%s(): Entering.\n", __func__);

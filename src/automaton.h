@@ -1,6 +1,6 @@
 /*
  * automaton.h: An automaton executing the program, creating widgets. 
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -28,7 +28,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "stack.h"
 #include "attributes.h"
 #include "stringman.h"

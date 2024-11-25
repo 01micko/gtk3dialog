@@ -1,6 +1,6 @@
 /*
  * actions.c:
- * Gtkdialog - A small utility for fast and easy GUI building.
+ * Gtk3dialog - A small utility for fast and easy GUI building.
  * Copyright (C) 2003-2007  László Pere <pipas@linux.pte.hu>
  * Copyright (C) 2011-2012  Thunor <thunorsif@hotmail.com>
  * 
@@ -30,7 +30,7 @@
 #include <regex.h>
 #endif
 
-#include "gtkdialog.h"
+#include "gtk3dialog.h"
 #include "widgets.h"
 #include "actions.h"
 #include "attributes.h"
@@ -38,7 +38,7 @@
 #include "tag_attributes.h"
 #include "config.h"
 
-int gtkdialog_parse(void);
+int gtk3dialog_parse(void);
 
 extern gchar *option_include_file;
 
@@ -49,9 +49,7 @@ void action_exitprogram(GtkWidget *widget, char *string);
 void action_refreshwidget(GtkWidget *widget, char *string);
 void action_savewidget(GtkWidget *widget, char *string);
 void action_fileselect(GtkWidget *widget, char *string);
-#if GTK_CHECK_VERSION(2,4,0)
 void action_fileselection_made(GtkWidget *w, actioncommand *ac);
-#endif
 void action_fileselection_destroy(GtkWidget *w, actioncommand *ac);
 void action_clearwidget(GtkWidget *widget, char *string);
 void action_removeselected(GtkWidget *widget, char *string);
@@ -118,7 +116,7 @@ void action_closewindow(GtkWidget *widget, char *string)
 			variables_count_widgets());
 #endif
 
-		/* If we are closing the last window then we can exit gtkdialog */
+		/* If we are closing the last window then we can exit gtk3dialog */
 		if (variables_count_widgets() == 0) {
 
 			printf("EXIT=\"closewindow\"\n");
@@ -181,7 +179,7 @@ void action_launchwindow(GtkWidget *widget, char *string)
 		/* Thunor: Added to check that a program isn't already being parsed
 		 * as run_program() is not reentrant and it'll error with a parser
 		 * message that actually relates to the newly launched program
-		 * (see Issue16 on the gtkdialog website) */
+		 * (see Issue16 on the gtk3dialog website) */
 		if (instruction_counter == 0) {
 
 			/* Check if a variable already exists with the same name as that
@@ -226,7 +224,7 @@ void action_launchwindow(GtkWidget *widget, char *string)
 #endif
 
 				/* Call the parser to interpret the new code (it won't return) */
-				gtkdialog_parse();
+				gtk3dialog_parse();
 
 				g_warning("%s(): This won't be reached.", __func__);
 
@@ -291,7 +289,6 @@ void action_savewidget(GtkWidget *widget, char *string)
  * connect it to the action_fileselection_made function to take
  * the selected file name */
 
-#if GTK_CHECK_VERSION(2,4,0)
 void action_fileselect(GtkWidget *widget, char *string)
 {
 	list_t                 *mime_types = NULL;
@@ -302,7 +299,7 @@ void action_fileselect(GtkWidget *widget, char *string)
 	GtkFileFilter          *filter;
 	GtkWidget              *chooser;
 	gchar                  *filename = NULL;
-	gchar                  *title = "Gtkdialog";
+	gchar                  *title = "Gtk3dialog";
 	gchar                  *value;
 	gint                    count;
 	gint                    response;
@@ -311,7 +308,7 @@ void action_fileselect(GtkWidget *widget, char *string)
 	fprintf(stderr, "%s(): string='%s'\n", __func__, string);
 #endif
 
-	if (var = variables_get_by_name(string)) {
+	if ((var = variables_get_by_name(string))) {
 
 		/* Set the title of the chooser dialog to the label directive
 		 * of the target widget if available (this was the original
@@ -357,9 +354,11 @@ void action_fileselect(GtkWidget *widget, char *string)
 		}
 
 		/* Create the file chooser dialog */
+		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 		chooser = gtk_file_chooser_dialog_new(title, NULL, action,
 			GTK_STOCK_OK, GTK_RESPONSE_OK,
 			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+			G_GNUC_END_IGNORE_DEPRECATIONS
 
 		/* Set current folder if present */
 		if (var->widget_tag_attr &&
@@ -436,7 +435,6 @@ void action_fileselect(GtkWidget *widget, char *string)
 				}
 				break;
 		}
-
 		/* Free linecutter memory */
 		if (patterns) list_t_free(patterns);
 		if (mime_types) list_t_free(mime_types);
@@ -446,60 +444,6 @@ void action_fileselect(GtkWidget *widget, char *string)
 	}
 
 }
-
-#else
-
-void action_fileselect(GtkWidget *widget, char *string)
-{
-	actioncommand *ac;
-	/*
-	 ** We create a new actioncommand.
-	 */
-	ac = g_malloc(sizeof(actioncommand));
-	ac->source_widget = gtk_file_selection_new("gtkwindow");
-	ac->destination_name = string;
-	gtk_widget_show(ac->source_widget);
-
-	/*
-	 ** We connect the OK button in fileselection dialog
-	 */
-	g_signal_connect(G_OBJECT
-			 (GTK_FILE_SELECTION(ac->source_widget)->
-			  ok_button), "clicked",
-			 G_CALLBACK(action_fileselection_made),
-			 (gpointer) ac);
-	/*
-	 ** We connect the Cancel button in fileselection dialog
-	 */
-	g_signal_connect(G_OBJECT
-			 (GTK_FILE_SELECTION(ac->source_widget)->
-			  cancel_button), "clicked",
-			 G_CALLBACK(action_fileselection_destroy),
-			 (gpointer) ac);
-}
-
-/***********************************************************************
- *                                                                     *
- ***********************************************************************/
-/* This function is called when the user presses the OK button in
- * a fileselection dialog */
-
-void action_fileselection_made(GtkWidget *w, actioncommand * ac)
-{
-	/*
-	 ** Let's copy the selected file name to the destination widget.
-	 */
-	variables_set_value((const char *)ac->destination_name,
-		gtk_file_selection_get_filename(GTK_FILE_SELECTION(ac->source_widget))
-	    );
-	/*
-	 ** We destroy the fileselection dialog and free the actioncommand
-	 ** memory.
-	 */
-	gtk_widget_destroy(ac->source_widget);
-	free(ac);
-}
-#endif
 
 /***********************************************************************
  *                                                                     *
@@ -646,7 +590,7 @@ void action_presentwindow(GtkWidget *widget, char *string)
  * Action command                                                      *
  ***********************************************************************/
 
-static void _action_shellcommand(const char *command)
+static void _action_shellcommand(char *command)
 {
 #if HAVE_BASH
 	char *argv[] = {"bash", "-c", command, NULL};
