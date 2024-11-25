@@ -1567,7 +1567,7 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 	gint              not;
 	gint              retval = FALSE;
 	gint              state = -1;
-	gchar             value[8] = "";
+	gchar             value[9] = "";
 	variable         *var;
 
 #ifdef DEBUG_TRANSITS
@@ -1844,12 +1844,12 @@ gboolean widget_signal_executor_eval_condition(gchar *condition)
 #if HAVE_SYS_INOTIFY_H
 void widget_file_monitor_try_create(variable *var, gchar *filename)
 {
-	gchar             fdname[16];
-	gchar             wdname[16];
+	gchar             fdname[22];
+	gchar             wdname[22];
 	gchar            *value;
 	gint              count;
 	gint32            fd, wd;
-	gint              index = 0;
+	guint              index = 0;
 #if GTK_CHECK_VERSION(3,0,0)
 	GIOChannel       *channel;
 #endif
@@ -1880,8 +1880,8 @@ void widget_file_monitor_try_create(variable *var, gchar *filename)
 #endif
 						/* Generate unique name */
 						while (TRUE) {
-							sprintf(fdname, "_inotifyfd%i", index);
-							sprintf(wdname, "_inotifywd%i", index);
+							sprintf(fdname, "_inotifyfd%u", index);
+							sprintf(wdname, "_inotifywd%u", index);
 							if (!(g_object_get_data(G_OBJECT(var->Widget),
 								fdname))) break;
 							index++;
