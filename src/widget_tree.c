@@ -700,7 +700,7 @@ void widget_tree_save(variable *var)
 	gchar            *filename = NULL;
 	gchar            *line;
 	gchar            *string;
-	gchar            *text;
+	gchar            *text = {0};
 	gint              column, columnmax;
 	gint              initialrow = TRUE;
 	gint64            valint64;

@@ -150,7 +150,7 @@ GtkWidget *widget_menuitem_create(
 	GtkWidget        *image;
 	GtkWidget        *widget;
 	gchar             accel_path[64];
-	gchar            *active;
+	gchar            *active  = {0};
 	gchar            *icon_name, *image_name;
 	gchar            *label, *stock_id;
 	gchar            *value;
