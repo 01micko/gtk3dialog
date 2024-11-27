@@ -3,7 +3,7 @@
 <html>
 <head>
 
-<title>gtkdialog: colorbutton widget reference</title>
+<title>gtk3dialog: colorbutton widget reference</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
 
@@ -83,8 +83,8 @@
 					<tr>
 						<td>
 <h1>colorbutton widget</h1>
-<p>Gtk2: A <a href="https://developer-old.gnome.org/gtk2/2.24/GtkColorButton.html">GtkColorButton</a></p>
-<p>Gtk3: A <a href="https://docs.gtk.org/gtk3/class.ColorButton.html">GtkColorButton</a></p>
+
+<p>Gtk3: A <a href="https://docs.gtk.org/gtk3/iface.ColorChooser.html">GtkColorChooser</a></p>
 <hr>
 <h2>Definition</h2>
 <pre><code>&lt;colorbutton tag_attr=&quot;value&quot;...&gt;
@@ -140,6 +140,17 @@
 <td class="wiki"><tt>true</tt> or <tt>false</tt></td>
 <td class="wiki">0.8.1</td>
 </tr>
+<tr>
+<td class="wiki">use-alpha</td>
+<td class="wiki">Initialise the colorbutton with transparency</td>
+<td class="wiki"><tt>true</tt> or <tt>false</tt></td>
+<td class="wiki"></td>
+</tr>
+<td class="wiki">alpha</td>
+<td class="wiki">Set the initial transparency value</td>
+<td class="wiki">int: <tt>0-65535</tt></td>
+<td class="wiki"></td>
+</tr>
 </tbody>
 </table>
 <h2 id="directives">Directives</h2>
@@ -155,7 +166,7 @@
 <tr>
 <td class="wiki">default</td>
 <td class="wiki">Initial data</td>
-<td class="wiki"><em>#rrggbb</em> <tt>|</tt> <em>alpha</em><sup>[1]</sup></td>
+<td class="wiki"><em>#rrggbb</em> <tt>|</tt> <em>alpha</em><sup>[<a href="#notes">1</a>]</sup></td>
 <td class="wiki"></td>
 </tr>
 <tr>
@@ -257,10 +268,10 @@
 </tbody>
 </table>
 <h2 id="signals">Signals</h2>
-<p>The default signal is “color-set” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton-color-set">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.ColorButton.color-set.html">Gtk3</a>), emitted when the user selects a colour.</p>
+<p>The default signal is “color-set” (<a href="https://docs.gtk.org/gtk3/signal.ColorButton.color-set.html">Gtk3</a>), emitted when the user selects a colour.</p>
 <p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
-<p><strong>Gtk2: </strong><a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+
 <p><strong>Gtk3: </strong><a href="https://docs.gtk.org/gtk3/signal.Widget.button-press-event.html">button-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.button-release-event.html">button-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.configure-event.html">configure-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.enter-notify-event.html">enter-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.leave-notify-event.html">leave-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-in-event.html">focus-in-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-out-event.html">focus-out-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.hide.html">hide</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.show.html">show</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.realize.html">realize</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-press-event.html">key-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-release-event.html">key-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.map-event.html">map-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.unmap-event.html">unmap-event</a></p>
 <h2 id="functions">Functions</h2>
 <p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
@@ -456,7 +467,7 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li>Setting the “use-alpha” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton--use-alpha">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.ColorButton.use-alpha.html">Gtk3</a>) tag attribute to true will enable alpha selection. Alpha can be passed in following the <em>#rrggbb</em> value separated by a ‘<tt>|</tt>’ character, or via the “alpha” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkColorButton.html#GtkColorButton--alpha">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.ColorButton.alpha.html">Gtk3</a>) tag attribute. Although the colour selection dialog displays alpha as an 8bit 0-255 value, GTK+ and Gtkdialog manage it as a 16bit 0-65535 value and therefore it’ll require converting between the two formats. To convert from 8bit to 16bit use <tt>alpha * 257</tt> and from 16bit to 8bit use <tt>(alpha + 257 / 2) / 257</tt>.</li>
+<li>Setting the “use-alpha” (<a href="https://docs.gtk.org/gtk3/property.ColorChooser.use-alpha.html">Gtk3</a>) tag attribute to true will enable alpha selection. Alpha can be passed in following the <em>#rrggbb</em> value separated by a ‘<tt>|</tt>’ character, or via the “alpha” (<a href="https://docs.gtk.org/gtk3/property.ColorButton.alpha.html">Gtk3</a>) tag attribute. Although the colour selection dialog displays alpha as an 8bit 0-255 value, GTK+ and Gtk3dialog manage it as a 16bit 0-65535 value and therefore it’ll require converting between the two formats. To convert from 8bit to 16bit use <tt>alpha * 257</tt> and from 16bit to 8bit use <tt>(alpha + 257 / 2) / 257</tt>. Further, you can pass the 8bit format in the the directives, again using the ‘<tt>|</tt>’ character from <tt>00</tt> to <tt>ff</tt> but <em>not</em> in the tag attribute.</li>
 </ol>
 <p>This widget was introduced in version 0.7.21.</p>
 <hr>
@@ -508,7 +519,7 @@
 						<td>
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="footer" width="50%" align="center"><a href="https://github.com/puppylinux-woof-CE/gtkdialog">Project Page</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://github.com/01micko/gtk3dialog">Project Page</a></td>
 									<td class="footer" width="50%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>
