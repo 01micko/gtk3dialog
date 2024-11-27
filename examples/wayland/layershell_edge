@@ -28,15 +28,15 @@ do
 		bottom)C='#FFFF00';OPT='edge="'$i'"';T=left;;
 		bottomleft)C='#FF0000';OPT='edge="'$i'"';T=up;;
 		left)C='#FF0000';OPT='edge="'$i'"';T='to center';;
-		foo)C='#0066AA';OPT='';T=finished;POS=center;;
+		foo)C='#0066AA';OPT='';T="where now?";POS=center;;
 	esac
 	
 
 MAIN_DIALOG='
 <window layer="top" dist="50" '$OPT' width-request="320">
 	<vbox>
-		<frame Description>
-			<text use-markup="true" tooltip-text="Drag a window over this one to test">
+		<frame Positions>
+			<text use-markup="true">
 				<label>"<big><big>This is '$POS'. Now <span fgcolor='"'$C'"'>Click</span>!</big></big>"</label>
 			</text>
 			<text>
@@ -68,8 +68,16 @@ esac
 if [ "$i" = "foo" ]; then
 	echo '<window layer="top">
   <vbox>
-    <pixmap><width>160</width><input file icon="face-smile"></input></pixmap>
-    <hbox><button ok></button></hbox>
+    <pixmap><width>180</width><input file>./smiley.svg</input></pixmap>
+    <hbox homogeneous="true">
+	  <button>
+	    <label>Smile</label>
+	    <height>24</height>
+        <width>24</width>
+        <input file>./smiley.svg</input>
+	    <action>exit:SMILE</action>
+	  </button>
+    </hbox>
   </vbox>
 </window>' | $GTK3DIALOG -s
 fi

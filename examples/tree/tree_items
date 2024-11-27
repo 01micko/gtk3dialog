@@ -2,7 +2,7 @@
 
 #
 # The <item> tag can hold the following attributes:
-#   o stock or stock-id
+#   o stock or icon-name
 #   o icon or icon-name
 #
 
@@ -35,9 +35,9 @@ MAIN_DIALOG='
 			<item>CD_ROM Drive                      | /cdrom/   | ak.iso</item>
 			<item>Floppy Disk                       | /floppy/  | ak.bin</item>
 			<item>Trash                             | /trash/   | ak.old</item>
-			<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | ak.idx</item>
-			<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-			<item stock-id="gtk-delete">Trash       | /trash/   | ak.old</item>
+			<item icon-name="gtk-cdrom">CD_ROM Drive | /cdrom/   | ak.idx</item>
+			<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+			<item icon-name="gtk-delete">Trash       | /trash/   | ak.old</item>
 			<item icon-name="gimp">CD_ROM Drive     | /cdrom/   | ak.png</item>
 			<item icon-name="gnumeric">Floppy Disk  | /floppy/  | ak.ods</item>
 			<item icon-name="">Trash                | /trash/   | ak.old</item>

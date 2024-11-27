@@ -2,7 +2,7 @@
 
 #
 # The <tree> tag can hold the following attributes for using as a default icon:
-#   o stock or stock-id
+#   o stock or icon-name
 #   o icon or icon-name
 #
 
@@ -23,7 +23,7 @@ MAIN_DIALOG='
 <window>
 	<vbox>
 		<text label="Default stock icon is gtk-apply"></text>
-		<tree stock-id="gtk-apply">
+		<tree icon-name="gtk-apply">
 			<variable>TREE1</variable>
 			<height>250</height>
 			<width>400</width>
@@ -32,7 +32,7 @@ MAIN_DIALOG='
 			<item>Floppy Disk | /floppy/  | ak.dvi</item>
 			<item icon-name="scribus">Floppy Disk | /floppy/  | ak.ps</item>
 			<item icon-name="top">Floppy Disk | /floppy/  | ak.pdf</item>
-			<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+			<item icon-name="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
 			<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
 		</tree>
 		<hseparator></hseparator>
@@ -46,7 +46,7 @@ MAIN_DIALOG='
 			<item>Floppy Disk | /floppy/  | ak.dvi</item>
 			<item icon-name="abiword">Floppy Disk | /floppy/  | ak.ps</item>
 			<item icon-name="geany">Floppy Disk | /floppy/  | ak.pdf</item>
-			<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+			<item icon-name="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
 			<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
 		</tree>
 		<hseparator></hseparator>

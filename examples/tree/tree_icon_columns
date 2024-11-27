@@ -11,6 +11,9 @@
 
 [ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
 
+export TMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
+mkdir -p  $TMPDIR
+
 funcInputstock() {
 	echo "gtk-open | | gtk-open | 2 "
 	echo "gtk-about | | gtk-about | 2 "
@@ -23,21 +26,26 @@ funcInputstock() {
 	echo "gtk-close | | gtk-close | 2 "
 	echo "gtk-color-picker | | gtk-color-picker | 2 "
 	echo "gtk-convert | | gtk-convert | 2 "
-}; export -f funcInputstock
+}
+export -f funcInputstock
 
 funcInputicon() {
 	echo "gimp | | gimp | 2 "
 	echo "gnumeric | | gnumeric | 2 "
 	echo "geany | | geany | 2 "
-	echo "viewnior | | viewnior | 2 "
-	echo "xarchive | | xarchive | 2 "
-	echo "scribus | | scribus | 2 "
+	echo "mtpaint | | mtpaint | 2 "
+	echo "firefox | | firefox | 2 "
+	echo "input-keyboard | | input-keyboard | 2 "
 	echo "inkscape | | inkscape | 2 "
 	echo "html | | html | 2 "
 	echo "top | | top | 2 "
 	echo "midori | | midori | 2 "
 	echo "abiword | | abiword | 2 "
-}; export -f funcInputicon
+}
+export -f funcInputicon
+
+funcInputstock > $TMPDIR/stock
+funcInputicon > $TMPDIR/icon
 
 export MAIN_DIALOG='
 <window>
@@ -49,7 +57,7 @@ export MAIN_DIALOG='
 					<height>300</height>
 					<width>200</width>
 					<label>0 | 1 | 2</label>
-					<input stock-column="0">bash -c funcInputstock</input>
+					<input file icon-column="0">'$TMPDIR/stock'</input>
 				</tree>
 			</frame>
 			<frame Theme icons from input command>
@@ -58,7 +66,7 @@ export MAIN_DIALOG='
 					<height>300</height>
 					<width>200</width>
 					<label>0 | 1 | 2</label>
-					<input icon-column="0">bash -c funcInputicon</input>
+					<input file icon-column="0">'$TMPDIR/icon'</input>
 				</tree>
 			</frame>
 		</hbox>

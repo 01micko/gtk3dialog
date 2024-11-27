@@ -22,7 +22,7 @@ funcitemsCreate() {
 
 	for f in 0 1 2 3 4 5 6 7 8 9; do
 		if [ $1 = 1 ]; then
-			echo -n '<item stock-id="'${stockids[$f]}'">'
+			echo -n '<item icon-name="'${stockids[$f]}'">'
 		elif [ $1 = 2 ]; then
 			echo -n '<item icon-name="'${iconnames[$f]}'">'
 		else echo -n '<item>'
@@ -99,7 +99,7 @@ selection-mode='3' (multiple)
 rules-hint='true'
 exported-column='3'"'"</label>
 				</text>
-				<tree stock-id="gtk-edit" selection-mode="3" exported-column="3" rules-hint="true">
+				<tree icon-name="gtk-edit" selection-mode="3" exported-column="3" rules-hint="true">
 					'"`funcitemsCreate 0`"'
 					'"`functreCreate tre3`"'
 			</vbox>

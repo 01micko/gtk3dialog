@@ -17,18 +17,8 @@ echo 'window {
 	background-color: rgba(0, 0, 0, 0);
 }' > $TMPDIR/clock.css
 
-SEC=$(date +%-S)
-SEC_ANGLE=$(($SEC * 6))
-MIN=$(date +%-M)
-MIN_ANGLE=$(($MIN * 6))
-HOUR=$(date +%-l)
-HOUR_ANGLE=$(($HOUR*30+($MIN_ANGLE/12)))
-
-
-
-# Functions====================================================================
-clk2svg()
-{
+# Functions=============================================================
+clk2svg() {
 #generate an image
 echo '<?xml version="1.0" encoding="utf-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="180" height="180" viewBox="0 0 512 512">
@@ -92,7 +82,7 @@ pixfunc(){
 }
 export -f pixfunc
 
-#==============================================================================
+#=======================================================================
 
 pixfunc
 
@@ -114,4 +104,3 @@ case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
 	*) $GTK3DIALOG --program=MAIN_DIALOG --styles=$TMPDIR/clock.css;;
 esac
-

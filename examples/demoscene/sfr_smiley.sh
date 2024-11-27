@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# This example requires bash.
+
+[ -z $GTKDIALOG ] && GTKDIALOG=gtkdialog
+
+# Gtkdialog is a C program and the C library will execute a system command
+# using /bin/sh so we need to make sure that bash executes any commands.
+# Ubuntu users whose /bin/sh links to dash should take note of this fact.
+USE_BASH=; [ "`readlink /bin/sh`" != bash ] && USE_BASH="bash -c "
+
+# Tech-Tech by SFR'2013
+# GPLv2 applies
+# Req: Gtkdialog >=0.8.0, Bash
+
+TEMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
+mkdir $TEMPDIR
+trap 'rm -rf $TEMPDIR' EXIT
+
+export PIC=$TEMPDIR/pic.svg
+export SINUS=$TEMPDIR/sinus_table
+export LINES=$TEMPDIR/lines
+
+: > $SINUS
+# Create sinus table
+for i in {0..63}; do
+  RAD=$(echo "$i*(3.14/32)" | bc -l)
+  VAL=$(printf "%.0f" $(echo "s($RAD) * 12" | bc -l))
+  echo $VAL >> $SINUS
+done
+
+# Convert bitmap (stripped xpm) to SVG's "stroke-dasharray" attributes
+cnt=1;curline=0
+while read LINE; do
+  L[$curline]="0"
+  for a in `seq 0 $((${#LINE}))`; do
+    [[ "${LINE:$a:1}" != "${LINE:$(($a+1)):1}" ]] && L[$curline]=${L[$curline]}",$cnt" && cnt=1 || ((cnt++))
+  done
+  ((curline++))
+done << EOF
+0000000000000000000000000000000000000000
+0000000000000000111111110000000000000000
+0000000000000111100000011110000000000000
+0000000000011100000000000011100000000000
+0000000001100000000000000000011000000000
+0000000011000000000000000000001100000000
+0000000110000000000000000000000110000000
+0000001000000000000000000000000001000000
+0000011000000000000000000000000001100000
+0000110000000000000000000000000000110000
+0000100000000000000000000000000000010000
+0001000000000000000000000000000000001000
+0001000001110000000000000000111000001000
+0011000011110000000000000000111000001100
+0010000011110000000000000000111100000100
+0010000011110000000000000000111100000100
+0110000001110000000000000000111000000110
+0100000000100000000000000000010000000010
+0100000000000000000000000000000000000010
+0100000000000000000000000000000000000010
+0100000000000000000000000000000000000010
+0100000000000000000000000000000000000010
+0100000000000000000000000000000000000010
+0110000000000000000000000000000000000110
+0010000000000000000000000000000000000100
+0010001100000000000000000000000011000100
+0011000110000000000000000000000110001100
+0001000011000000000000000000001100001000
+0001000001110000000000000000111000001000
+0000100000011000000000000001100000010000
+0000110000001111000000001111000000110000
+0000011000000001111111111000000001100000
+0000001000000000000000000000000001000000
+0000000110000000000000000000000110000000
+0000000011000000000000000000001100000000
+0000000001100000000000000000011000000000
+0000000000011100000000000011100000000000
+0000000000000111100000011110000000000000
+0000000000000000111111110000000000000000
+0000000000000000000000000000000000000000
+EOF
+
+echo ${L[@]} > $LINES
+# -----------------------------------------------------------------------------
+
+tech () {
+L=( $(<$LINES) )
+SIN=( $(<$SINUS) )
+
+echo '<svg width="120" height="180" viewBox="0 0 40 60">' > $PIC
+#for a in `seq 0 $((${#L[@]}-1))`; do
+for ((a=0; a<${#L[@]}; a++)); do
+  echo '<line x1="'${SIN[$a]}'" y1="'$(($a+16))'" x2="'$((512+${SIN[$a]}))'" y2="'$(($a+16))'" stroke-dasharray="'${L[$a]}'" stroke="black" stroke-width="2" />' >> $PIC
+done
+echo '</svg>' >> $PIC
+
+echo ${SIN[63]} ${SIN[@]:0:63} > $SINUS
+
+}
+export -f tech
+
+export MAIN='
+<window title="Tech-Tech" resizable="false">
+  <pixmap>
+    <variable>PICTURE</variable>
+    <input file>'$PIC'</input>
+  </pixmap>
+  <timer visible="false" milliseconds="true" interval="50">
+    <action>'$USE_BASH'tech</action>
+    <action>refresh:PICTURE</action>
+  </timer>
+<action signal="hide">exit:abort</action>
+</window>
+'
+
+case $1 in
+	-d | --dump) echo "$MAIN" ;;
+	*) $GTKDIALOG -cp MAIN ;;
+esac

@@ -22,11 +22,11 @@ MAIN_DIALOG='
 				<height>260</height>
 				<width>400</width>
 				<label>Device                           | Directory | File</label>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
-				<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
+				<item icon-name="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
 				<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
 			</tree>
 		</frame>
@@ -36,11 +36,11 @@ MAIN_DIALOG='
 				<height>260</height>
 				<width>400</width>
 				<label>Device                           | Directory | File</label>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
-				<item stock-id="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
-				<item stock-id="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.tex</item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.dvi</item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.ps</item>
+				<item icon-name="gtk-floppy">Floppy Disk | /floppy/  | ak.pdf</item>
+				<item icon-name="gtk-cdrom">CD_ROM Drive | /cdrom/   | </item>
 				<input file stock-column="0">'"$TMPDIR"'/inputfile</input>
 			</tree>
 		</frame>

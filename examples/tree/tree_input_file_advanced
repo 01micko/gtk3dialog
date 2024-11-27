@@ -106,7 +106,7 @@ selection-mode='3' (multiple)
 rules-hint='true'
 exported-column='3'"'"</label>
 				</text>
-				<tree stock-id="gtk-justify-center" selection-mode="3" exported-column="3" rules-hint="true">
+				<tree icon-name="gtk-justify-center" selection-mode="3" exported-column="3" rules-hint="true">
 					<input file>'"$TMPDIR"'/inputfile0</input>
 					'"`functreCreate tre3`"'
 			</vbox>

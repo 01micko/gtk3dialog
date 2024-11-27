@@ -16,7 +16,7 @@ funcfiletreCreate() {
 }
 
 functreCreate() {
-	echo '<tree selection-mode="'$2'" stock-id="'$3'">
+	echo '<tree selection-mode="'$2'" icon-name="'$3'">
 			<variable>'$1'</variable>
 			<label>Items</label>
 			<height>200</height>

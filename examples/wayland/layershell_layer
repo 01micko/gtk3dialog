@@ -30,7 +30,7 @@ do
 MAIN_DIALOG='
 <window layer="'$i'" width-request="320">
 	<vbox>
-		<frame Description>
+		<frame Layers>
 			<text use-markup="true" tooltip-text="Drag a window over this one to test">
 				<label>"<big><big>This is a'$o' window.</big></big>"</label>
 			</text>
