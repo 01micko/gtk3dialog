@@ -155,7 +155,7 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 			(guint)(color.red * 255),
 			(guint)(color.green * 255),
 			(guint)(color.blue * 255),
-			(guint)(color.alpha * 255));
+			(guint)(color.alpha * 257));
 	} else {
 		sprintf(envvar, "#%02x%02x%02x|%02x",
 			(guint)(color.red * 255),
@@ -163,7 +163,6 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 			(guint)(color.blue * 255),
 			(guint)(1.0 * 255));
 	}
-	//printf("env: %s\n",envvar);
 	string = g_strdup(envvar);
 
 #ifdef DEBUG_TRANSITS
@@ -268,7 +267,7 @@ void widget_colorbutton_refresh(variable *var)
 					float rgbf = 1.0;
 					a_len = strlen(a);
 					if (a_len == 2) { /* parse the #aabbcc|dd notion */
-						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 255.0;
+						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 256.0;
 					} else { /* parse the old 0 - 65535 notion */
 						rgbf = atof(a) / 256 / 256;
 					}
@@ -368,7 +367,7 @@ void widget_colorbutton_save(variable *var)
 					(guint)(color.red * 255),
 					(guint)(color.green * 255),
 					(guint)(color.blue * 255),
-					(guint)(color.alpha * 255));
+					(guint)(color.alpha * 257));
 
 			} else {
 				fprintf(outfile, "#%02x%02x%02x|%02x",
@@ -448,7 +447,7 @@ static void widget_colorbutton_input_by_command(variable *var, char *command)
 					float rgbf = 1.0;
 					a_len = strlen(a);
 					if (a_len == 2) { /* parse the #aabbcc|dd notion */
-						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 255.0;
+						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 256.0;
 					} else { /* parse the old 0 - 65535 notion */
 						rgbf = atof(a) / 256 / 256;
 					}
@@ -534,7 +533,7 @@ static void widget_colorbutton_input_by_file(variable *var, char *filename)
 					float rgbf = 1.0;
 					a_len = strlen(a);
 					if (a_len == 2) { /* parse the #aabbcc|dd notion */
-						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 255.0;
+						rgbf = (hex_to_dec(a[0]) * 16 + hex_to_dec(a[1])) / 256.0;
 					} else { /* parse the old 0 - 65535 notion */
 						rgbf = atof(a) / 256 / 256;
 					}
