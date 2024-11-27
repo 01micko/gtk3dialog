@@ -155,7 +155,7 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 			(guint)(color.red * 255),
 			(guint)(color.green * 255),
 			(guint)(color.blue * 255),
-			(guint)(color.alpha * 257));
+			(guint)(color.alpha * 256));
 	} else {
 		sprintf(envvar, "#%02x%02x%02x|%02x",
 			(guint)(color.red * 255),
@@ -367,7 +367,7 @@ void widget_colorbutton_save(variable *var)
 					(guint)(color.red * 255),
 					(guint)(color.green * 255),
 					(guint)(color.blue * 255),
-					(guint)(color.alpha * 257));
+					(guint)(color.alpha * 256));
 
 			} else {
 				fprintf(outfile, "#%02x%02x%02x|%02x",
