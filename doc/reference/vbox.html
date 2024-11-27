@@ -3,7 +3,7 @@
 <html>
 <head>
 
-<title>gtkdialog: vbox widget reference</title>
+<title>gtk3dialog: vbox widget reference</title>
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
 
@@ -83,7 +83,7 @@
 					<tr>
 						<td>
 <h1>vbox widget</h1>
-<p>Gtk2: A <a href="https://developer-old.gnome.org/gtk2/2.24/GtkVBox.html">GtkVBox</a> optionally packed inside a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkViewport.html">GtkViewport</a> inside a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkScrolledWindow.html">GtkScrolledWindow</a></p>
+
 <p>Gtk3: A <a href="https://docs.gtk.org/gtk3/class.VBox.html">GtkVBox</a> optionally packed inside a <a href="https://docs.gtk.org/gtk3/class.Viewport.html">GtkViewport</a> inside a <a href="https://docs.gtk.org/gtk3/class.ScrolledWindow.html">GtkScrolledWindow</a></p>
 <hr>
 <h2>Definition</h2>
@@ -232,7 +232,7 @@
 <h2 id="signals">Signals</h2>
 <p>There is no default signal for this widget.</p>
 <p>The following signals are connected-up for all widgets:</p>
-<p><strong>Gtk2: </strong><a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-press-event">button-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-button-release-event">button-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-configure-event">configure-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-enter-notify-event">enter-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-leave-notify-event">leave-notify-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-in-event">focus-in-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-focus-out-event">focus-out-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-hide">hide</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-show">show</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-realize">realize</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-press-event">key-press-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-key-release-event">key-release-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-map-event">map-event</a>, <a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget-unmap-event">unmap-event</a></p>
+
 <p><strong>Gtk3: </strong><a href="https://docs.gtk.org/gtk3/signal.Widget.button-press-event.html">button-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.button-release-event.html">button-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.configure-event.html">configure-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.enter-notify-event.html">enter-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.leave-notify-event.html">leave-notify-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-in-event.html">focus-in-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.focus-out-event.html">focus-out-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.hide.html">hide</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.show.html">show</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.realize.html">realize</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-press-event.html">key-press-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.key-release-event.html">key-release-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.map-event.html">map-event</a>, <a href="https://docs.gtk.org/gtk3/signal.Widget.unmap-event.html">unmap-event</a></p>
 <h2 id="functions">Functions</h2>
 <p>The following functions can be performed upon this widget by any widget capable of emitting signals:</p>
@@ -404,7 +404,7 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li><p>By default the frame widget and every widget automatically placed inside a scrolled window (edit, tree, list, table and optionally the h/vbox) are packed with expand and fill set to true, otherwise widgets are packed with expand and fill set to false. This rather quirky system constitutes the original Gtkdialog widget packing method and therefore must continue to be supported, but since 0.7.21 it’s now possible to override this behaviour globally with the –space-expand=state and –space-fill=state command line options, at the h/vbox container level or at the individual widget level or a combination thereof.</p></li>
+<li><p>By default the frame widget and every widget automatically placed inside a scrolled window (edit, tree, list, table and optionally the h/vbox) are packed with expand and fill set to true, otherwise widgets are packed with expand and fill set to false. This rather quirky system constitutes the original Gtk3dialog widget packing method and therefore must continue to be supported, but since 0.7.21 it’s now possible to override this behaviour globally with the –space-expand=state and –space-fill=state command line options, at the h/vbox container level or at the individual widget level or a combination thereof.</p></li>
 <li><p>The scrolled window has a default dimension of 200x100 which can be overridden with the height and/or width directives.</p></li>
 </ol>
 <p>This widget has a default spacing of 5 which can be overridden with the “spacing” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkBox.html#GtkBox--spacing">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Box.spacing.html">Gtk3</a>) tag attribute.</p>
@@ -457,7 +457,7 @@
 						<td>
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="footer" width="50%" align="center"><a href="https://github.com/puppylinux-woof-CE/gtkdialog">Project Page</a></td>
+									<td class="footer" width="50%" align="center"><a href="https://github.com/01micko/gtk3dialog">Project Page</a></td>
 									<td class="footer" width="50%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>

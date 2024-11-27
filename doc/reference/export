@@ -44,7 +44,7 @@ echo '
 <html>
 <head>
 
-'$(grep "#summary " $inputfile | sed 's|#summary \(.*\)|<title>gtkdialog: \1</title>|')'
+'$(grep "#summary " $inputfile | sed 's|#summary \(.*\)|<title>gtk3dialog: \1</title>|')'
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
 
@@ -169,7 +169,7 @@ echo '</p>
 							<table width="100%" cellpadding="0px" cellspacing="0px">
 								<tr>
 									<td class="footer" width="33%" align="center">'$(date "+%Y-%m-%d")' <a href="mailto:thunorsif@hotmail.com">Thunor</a></td>
-									<td class="footer" width="33%" align="center"><a href="https://code.google.com/p/gtkdialog/">Project Page</a></td>
+									<td class="footer" width="33%" align="center"><a href="https://code.google.com/p/gtk3dialog/">Project Page</a></td>
 									<td class="footer" width="33%" align="center"><a href="https://www.murga-linux.com/puppy/viewtopic.php?t=69188">Development Thread</a></td>
 								</tr>
 							</table>
