@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# This example requires bash, dc
+export TMPDIR=/tmp/gtk3dialog/examples/"`basename $0`"
+mkdir -p  $TMPDIR
+
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
+
+find_color() {
+    printf "%d" "0x${1}"
+}
+
+export col_in=''; ZC=''; ZF=''; AF='' 
+_get() {
+    col_in="$1"; aa=$2
+   if [[ -n "$aa" ]]; then
+    	AC=$(find_color $aa)
+		AF=$(dc -e'3k '$AC' 255 / p')
+		X=''
+		[ ${AF:0:1} = '.' ] && X=0
+		AF=$X$AF
+	else
+		AF=1.0
+	fi
+    echo -e '<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"  width="192px" height="128px" viewBox="0 0 48 32">' >  $TMPDIR/col.svg
+	cnt=0
+	while [[ $cnt -lt 24 ]] ; do
+	case $cnt in 
+		0|2|4)echo '  <path d="m 0 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#fff"/>' >> $TMPDIR/col.svg ;;
+		1|3|5)echo '  <path d="m 8 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#ccc"/>' >> $TMPDIR/col.svg ;;
+		6|8|10)echo '  <path d="m 0 8 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#ccc"/>' >> $TMPDIR/col.svg ;;
+		7|9|11)echo '  <path d="m 8 8 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#fff"/>' >> $TMPDIR/col.svg ;;
+		12|14|16)echo '  <path d="m 0 16 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#fff"/>' >> $TMPDIR/col.svg ;;
+		13|15|17)echo '  <path d="m 8 16 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#ccc"/>' >> $TMPDIR/col.svg ;;
+		18|20|22)echo '  <path d="m 0 24 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#ccc"/>' >> $TMPDIR/col.svg ;;
+		19|21|23)echo '  <path d="m 8 24 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z m 16 0 8 0 0 8 -8 0 z " style="fill:#fff"/>' >> $TMPDIR/col.svg ;;
+	esac
+	cnt=$(($cnt + 1))
+	done
+  echo -e '  <path d="m 0 0 48 0 0 32 -48 0 z" style="fill:'$col_in';stroke:none;opacity:'$AF';"/>
+</svg>' >> $TMPDIR/col.svg
+    BCOL=${col_in/\#/}
+    BR=${BCOL:0:2}; BG=${BCOL:2:2}; BB=${BCOL:4:2};
+    BHR=$(find_color $BR)
+    BHG=$(find_color $BG)
+    BHB=$(find_color $BB)
+    ZC=''$BHR','$BHG','$BHB''
+    BHR=$(dc -e'3k '$BHR' 255 / p')
+    BHG=$(dc -e'3k '$BHG' 255 / p')
+    BHB=$(dc -e'3k '$BHB' 255 / p')
+    X=''
+    [ ${BHR:0:1} = '.' ] && X=0
+    [ ${BHG:0:1} = '.' ] && X=0
+    [ ${BHB:0:1} = '.' ] && X=0
+    ZF=''$X$BHR','$X$BHG','$X$BHB''
+    return 0
+}
+
+
+export -f find_color _get
+
+func_entry() {
+	echo '<default>'$1'</default>'
+}
+
+export COLOR_DIALOG='
+<window title="ColorPicker" resizable="false"><vbox>
+		<vbox border-width="30">
+			<hbox>
+				<colorbutton use-alpha="true">
+					<default>#4488cc|32768</default>
+					<variable>clb0</variable>
+		</colorbutton>
+		<entry editable="false" width-request="360">
+			<default>Choose a color.</default>
+		</entry>
+	</hbox></vbox>
+		<hseparator></hseparator>
+		<hbox homogeneous="true">
+			<button></button>
+		</hbox>
+	</vbox>
+</window>'
+
+eval $($GTK3DIALOG --program=COLOR_DIALOG)
+
+_get ${clb0%\|*} ${clb0#*\|}
+
+RGBA="rgba($ZC,$AF)"
+sRGBA="sRGBA($ZF,$AF)"
+
+echo '<window title="Your Color">
+	<vbox border-width="15">
+	<hbox homogeneous="true">
+	<pixmap>
+		<input file>'$TMPDIR/col.svg'</input>
+	</pixmap>
+	</hbox>
+	<hseparator></hseparator>
+	<hbox>
+		<entry width-request="360" tooltip-text="HEX format">
+			'$(func_entry $col_in)'
+		</entry>
+	</hbox>
+	<hbox>
+		<entry width-request="360" tooltip-text="RGBA - for example in CSS">
+			'$(func_entry "$RGBA")'
+		</entry>
+	</hbox>
+	<hbox>
+		<entry width-request="320" tooltip-text="sRGBA - for example in Cairo">
+			'$(func_entry "$sRGBA")'
+		</entry>
+	</hbox>
+	<hbox>
+		<entry width-request="320" tooltip-text="alpha">
+			'$(func_entry "$AF")'
+		</entry>
+	</hbox>
+	<hbox><button ok></button></hbox>
+	</vbox>
+</window>
+' | $GTK3DIALOG -s
