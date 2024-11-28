@@ -151,17 +151,20 @@ gchar *widget_colorbutton_envvar_construct(GtkWidget *widget)
 #endif
 	gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(widget), &color);
 	if (gtk_color_chooser_get_use_alpha(GTK_COLOR_CHOOSER(widget))) {
+		/* a user may choose an opaque color in 'use-alpha' */
+		guint factor = 256;
+		if ( color.alpha == 1.0  )
+			factor = 255;
 		sprintf(envvar, "#%02x%02x%02x|%02x",
 			(guint)(color.red * 255),
 			(guint)(color.green * 255),
 			(guint)(color.blue * 255),
-			(guint)(color.alpha * 256));
+			(guint)(color.alpha * factor));
 	} else {
-		sprintf(envvar, "#%02x%02x%02x|%02x",
+		sprintf(envvar, "#%02x%02x%02x",
 			(guint)(color.red * 255),
 			(guint)(color.green * 255),
-			(guint)(color.blue * 255),
-			(guint)(1.0 * 255));
+			(guint)(color.blue * 255));
 	}
 	string = g_strdup(envvar);
 
