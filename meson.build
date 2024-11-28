@@ -27,7 +27,7 @@ endif
 if get_option('docs')
 	subdir('doc')
 	install_subdir(
-	'examples', install_dir : join_paths(get_option('datadir'), 'doc')
+	'examples', install_dir : join_paths(get_option('datadir'), 'doc', 'gtk3dialog')
 	)
 endif
 
