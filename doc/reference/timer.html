@@ -84,7 +84,7 @@
 						<td>
 <h1>timer widget</h1>
 
-<p>Gtk3: A <a href="https://docs.gtk.org/glib/func.timeout_add.html">timer</a> attached to a <a href="https://developer-old.gnome.org/gtk2/2.24/GtkLabel.html">GtkLabel</a></p>
+<p>Gtk3: A <a href="https://docs.gtk.org/glib/func.timeout_add.html">timer</a> attached to a GtkLabel or other widget</p>
 <hr>
 <h2>Definition</h2>
 <pre><code>&lt;timer tag_attr=&quot;value&quot;...&gt;
@@ -424,7 +424,7 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li><p>The “visible” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkWidget.html#GtkWidget--visible">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Widget.visible.html">Gtk3</a>) tag attribute will be required to hide the timer widget as it is visible by default.</p></li>
+<li><p>The “visible” (<a href="https://docs.gtk.org/gtk3/property.Widget.visible.html">Gtk3</a>) tag attribute will be required to hide the timer widget as it is visible by default.</p></li>
 <li><p>The default precision is seconds using a default interval of 1 second.</p></li>
 <li><p>The “sensitive” property i.e. its active state constitutes the data for this widget.</p></li>
 </ol>

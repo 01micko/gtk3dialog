@@ -239,12 +239,6 @@
 <td class="wiki"></td>
 <td class="wiki"></td>
 </tr>
-<tr>
-<td class="wiki">stock-id</td>
-<td class="wiki">Default GTK stock icon ID for all rows</td>
-<td class="wiki"><tt>gtk-about</tt>, <tt>gtk-add</tt> ... (<a href="https://developer-old.gnome.org/gtk2/2.24/gtk2-Stock-Items.html#GTK-STOCK-ABOUT:CAPS">full list</a> - Gtk2)</td>
-<td class="wiki"></td>
-</tr>
 </tbody>
 </table>
 <h2 id="directives">Directives</h2>
@@ -416,9 +410,9 @@
 </tbody>
 </table>
 <h2 id="signals">Signals</h2>
-<p>The default signal is “row-activated” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkTreeView.html#GtkTreeView-row-activated">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.TreeView.row-activated.html">Gtk3</a>), emitted when the user double-clicks a row and also when a row is selected and one of the keys Space, Shift+Space, Return or Enter is pressed.</p>
-<p>The “changed” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkTreeSelection.html#GtkTreeSelection-changed">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.TreeSelection.changed.html">Gtk3</a>) signal is emitted when the selection has changed (please see link about this).</p>
-<p>The “cursor-changed” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkTreeView.html#GtkTreeView-cursor-changed">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.TreeView.cursor-changed.html">Gtk3</a>) signal is emitted when the position of the cursor (focused cell) has changed.</p>
+<p>The default signal is “row-activated” (<a href="https://docs.gtk.org/gtk3/signal.TreeView.row-activated.html">Gtk3</a>), emitted when the user double-clicks a row and also when a row is selected and one of the keys Space, Shift+Space, Return or Enter is pressed.</p>
+<p>The “changed” (<a href="https://docs.gtk.org/gtk3/signal.TreeSelection.changed.html">Gtk3</a>) signal is emitted when the selection has changed (please see link about this).</p>
+<p>The “cursor-changed” (<a href="https://docs.gtk.org/gtk3/signal.TreeView.cursor-changed.html">Gtk3</a>) signal is emitted when the position of the cursor (focused cell) has changed.</p>
 <p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
 

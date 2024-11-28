@@ -276,7 +276,7 @@
 <tr>
 <td class="wiki">item</td>
 <td class="wiki">Input data for marks and markup<sup><a href="#note1">[1]</a></sup></td>
-<td class="wiki">value: <em>position</em><sup>(<a href="https://developer-old.gnome.org/gtk2/2.24/gtk2-Standard-Enumerations.html#GtkPositionType">gtk2</a>)</sup><sup>(<a href="https://docs.gtk.org/gtk3/enum.PositionType.html">gtk3</a>)</sup> <tt>|</tt> <em>markup</em><sup>(<a href="https://developer-old.gnome.org/pango/stable/PangoMarkupFormat.html">gtk2</a>)</sup><sup>(<a href="https://docs.gtk.org/Pango/pango_markup.html">gtk3</a>)</sup> (optional)</td>
+<td class="wiki">value: <em>position</em>><sup>(<a href="https://docs.gtk.org/gtk3/enum.PositionType.html">gtk3</a>)</sup> <tt>|</tt> <em>markup</em><sup>(<a href="https://docs.gtk.org/Pango/pango_markup.html">gtk3</a>)</sup> (optional)</td>
 <td class="wiki"></td>
 </tr>
 <tr>
@@ -288,7 +288,7 @@
 </tbody>
 </table>
 <h2 id="signals">Signals</h2>
-<p>The default signal is “value-changed" (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkRange.html#GtkRange-value-changed">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.Range.value-changed.html">Gtk3</a>), emitted when the range value changes.</p>
+<p>The default signal is “value-changed" (<a href="https://docs.gtk.org/gtk3/signal.Range.value-changed.html">Gtk3</a>), emitted when the range value changes.</p>
 <p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
 
@@ -480,9 +480,6 @@
 </table>
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
-<ol type="1">
-<li>Scale marks and markup require at least <a href="https://developer-old.gnome.org/gtk2/2.24/GtkScale.html#gtk-scale-add-mark">GTK+ 2.16</a>.</li>
-</ol>
 <p>This widget was introduced in version 0.7.21.</p>
 <hr>
 <p>

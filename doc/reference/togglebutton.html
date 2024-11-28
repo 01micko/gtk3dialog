@@ -162,12 +162,6 @@
 <td class="wiki">An integer &gt; <tt>0</tt> or <tt>-1</tt> to ignore</td>
 <td class="wiki">0.8.1</td>
 </tr>
-<tr>
-<td class="wiki">stock-icon-size</td>
-<td class="wiki">The size of the GTK stock icon</td>
-<td class="wiki"><tt>0</tt> to <tt>6</tt> (see <a href="https://developer-old.gnome.org/gtk2/2.24/gtk2-Themeable-Stock-Images.html#GtkIconSize">GtkIconSize</a> - Gtk2)</td>
-<td class="wiki">0.8.1</td>
-</tr>
 </tbody>
 </table>
 <h2 id="directives">Directives</h2>
@@ -232,12 +226,6 @@
 <td class="wiki">input file icon=“<em>image</em>”<sup>[3]</sup></td>
 <td class="wiki">GTK theme icon name</td>
 <td class="wiki"></td>
-<td class="wiki"></td>
-</tr>
-<tr>
-<td class="wiki">input file stock=“<em>gtk-image</em>”<sup>[4]</sup></td>
-<td class="wiki">GTK stock icon ID</td>
-<td class="wiki"><tt>gtk-about</tt>, <tt>gtk-add</tt> ... (<a href="https://developer-old.gnome.org/gtk2/2.24/gtk2-Stock-Items.html#GTK-STOCK-ABOUT:CAPS">full list</a>)</td>
 <td class="wiki"></td>
 </tr>
 <tr>
@@ -309,7 +297,7 @@
 </tbody>
 </table>
 <h2 id="signals">Signals</h2>
-<p>The default signal is “toggled” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkToggleButton.html#GtkToggleButton-toggled">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/signal.ToggleButton.toggled.html">Gtk3</a>), emitted when the state is changed.</p>
+<p>The default signal is “toggled” (<a href="https://docs.gtk.org/gtk3/signal.ToggleButton.toggled.html">Gtk3</a>), emitted when the state is changed.</p>
 <p>The “file-changed” signal is emitted if file-monitor is true and the input file being monitored has changed.</p>
 <p>The following signals are connected-up for all widgets:</p>
 
@@ -502,8 +490,8 @@
 <p>true means “true”, “yes” or a non-zero value, false means “false”, “no” or zero, therefore the shell command is expected to echo one of these values to stdout.</p>
 <h2 id="notes">Notes</h2>
 <ol type="1">
-<li><p>The existing “image-position” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkButton.html#GtkButton--image-position">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Button.image-position.html">Gtk3</a>) GTK+ property – normally only applicable to stock buttons – has been extended to apply to all Gtk3dialog buttons.</p></li>
-<li><p>The existing “homogeneous” (<a href="https://developer-old.gnome.org/gtk2/2.24/GtkBox.html#GtkBox--homogeneous">Gtk2</a>, <a href="https://docs.gtk.org/gtk3/property.Box.homogeneous.html">Gtk3</a>) GTK+ property – applicable to the hbox and vbox – can be used here to affect the box inside the button when including an image and a label.</p></li>
+<li><p>The existing “image-position” (<a href="https://docs.gtk.org/gtk3/property.Button.image-position.html">Gtk3</a>) GTK+ property – normally only applicable to stock buttons – has been extended to apply to all Gtk3dialog buttons.</p></li>
+<li><p>The existing “homogeneous” (<a href="https://docs.gtk.org/gtk3/property.Box.homogeneous.html">Gtk3</a>) GTK+ property – applicable to the hbox and vbox – can be used here to affect the box inside the button when including an image and a label.</p></li>
 <li><p>Theme icons default to 20 and do not scale or refresh (the “theme-icon-size” custom tag attribute can be used to request a size).</p></li>
 <li><p>Stock icons default to GTK_ICON_SIZE_BUTTON and do not scale or refresh (the “stock-icon-size” custom tag attribute can be used to request a size).</p></li>
 <li><p>This widget’s actions can be conditionally executed (based upon its active state) by prepending its contents with <tt>if true</tt> or <tt>if false</tt> although 0.8.3 introduced a dedicated condition attribute which may be more suitable.</p></li>
