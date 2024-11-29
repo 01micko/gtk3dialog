@@ -122,6 +122,7 @@ GtkWidget *widget_window_create(
 	
 	GtkLayerShellEdge edge = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
 	GtkLayerShellEdge corner = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
+	GtkLayerShellEdge oppcorner = GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER;
 	
 	value = get_tag_attribute(attr, "edge");
 	if (value) {
@@ -148,6 +149,34 @@ GtkWidget *widget_window_create(
 		else if (strcmp(value, "bottomright") == 0) {
 			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
 			corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+		}
+		else if (strcmp(value, "hstride") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+			corner = GTK_LAYER_SHELL_EDGE_LEFT;
+		}
+		else if (strcmp(value, "vstride") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_TOP;
+			corner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+		}
+		else if (strcmp(value, "topstride") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_TOP;
+			corner = GTK_LAYER_SHELL_EDGE_LEFT;
+			oppcorner = GTK_LAYER_SHELL_EDGE_RIGHT;
+		}
+		else if (strcmp(value, "bottomstride") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_BOTTOM;
+			corner = GTK_LAYER_SHELL_EDGE_LEFT;
+			oppcorner = GTK_LAYER_SHELL_EDGE_RIGHT;
+		}
+		else if (strcmp(value, "leftstride") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_LEFT;
+			corner = GTK_LAYER_SHELL_EDGE_TOP;
+			oppcorner = GTK_LAYER_SHELL_EDGE_BOTTOM;
+		}
+		else if (strcmp(value, "rightstride") == 0) {
+			edge = GTK_LAYER_SHELL_EDGE_RIGHT;
+			corner = GTK_LAYER_SHELL_EDGE_TOP;
+			oppcorner = GTK_LAYER_SHELL_EDGE_BOTTOM;
 		}
 		else
 			g_warning("%s(): Unknown edge %s.", __func__, value); 
@@ -179,6 +208,9 @@ GtkWidget *widget_window_create(
 		gtk_layer_set_anchor(GTK_WINDOW(widget), edge, TRUE);
 		if (corner != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
 			gtk_layer_set_anchor(GTK_WINDOW(widget), corner, TRUE);
+		}
+		if (oppcorner != GTK_LAYER_SHELL_EDGE_ENTRY_NUMBER) {
+			gtk_layer_set_anchor(GTK_WINDOW(widget), oppcorner, TRUE);
 		}
 	}
 
