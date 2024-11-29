@@ -1,0 +1,57 @@
+#!/bin/sh
+
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
+
+if [ -z "WAYLAND_DISPLAY" ]; then
+	echo '<window>
+	       <vbox>
+	         <text><label>ERROR: You are not running wayland</label></text>
+	       <hbox>
+	         <button ok></button>
+	       </hbox>
+	       </vbox>
+	     </window>' | $GTK3DIALOG -s
+	     exit
+fi
+
+PID=$$
+
+for i in 1 2 3 4
+do
+export MAR
+MAR=0
+[ -n "$spb4" ] && MAR=$spb4
+
+MAIN_DIALOG='
+<window layer="top" dist="'$MAR'" edge="top" width-request="320">
+	<vbox>
+		<frame Margin '$MAR'>
+			<text use-markup="true">
+				<label>"<big><big>This is margin '$MAR'.</big></big>"</label>
+			</text>
+		<hbox homogeneous="true">
+			<spinbutton range-min="0" range-max="200" range-value="'$MAR'">
+			     <variable>spb4</variable>
+			</spinbutton>
+		</hbox>		
+		</frame>
+		<hbox>
+			<button ok></button>
+			<button>
+				<label>Cancel</label>
+				<input file icon="gtk-cancel"></input>
+				<action>kill '$PID'</action>
+				<action>exit:CANCEL</action>
+			</button>
+		</hbox>
+	</vbox>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) eval $($GTK3DIALOG --program=MAIN_DIALOG) ;;
+esac
+
+done
