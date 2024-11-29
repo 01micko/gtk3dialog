@@ -35,10 +35,10 @@ In no particualr order:
 - [ ] fix the rest of the compiler warnings
 - [ ] add at least `gtk-grid` widget
 - [ ] fix documentataion including a `man` page
-- [ ] even better wayland support (WIP)
+- [x] even better wayland support
 - [ ] CSD (maybe)
-- [ ] fix examples and `html` docs for new name
-- [ ] Wiki
+- [x] fix examples and `html` docs for new name
+- [ ] Wiki (added - WIP)
 
 # Build
 

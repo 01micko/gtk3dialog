@@ -51,7 +51,7 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) eval $($GTK3DIALOG --program=MAIN_DIALOG) ;;
+	*) eval $($GTK3DIALOG --program=MAIN_DIALOG --styles=./window.css) ;;
 esac
 
 done

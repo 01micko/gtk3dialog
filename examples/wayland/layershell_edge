@@ -63,7 +63,7 @@ export MAIN_DIALOG
 
 case $1 in
 	-d | --dump) echo "$MAIN_DIALOG" ;;
-	*) $GTK3DIALOG --program=MAIN_DIALOG ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG --styles=./window.css ;;
 esac
 if [ "$i" = "foo" ]; then
 	echo '<window layer="top">
@@ -79,6 +79,6 @@ if [ "$i" = "foo" ]; then
 	  </button>
     </hbox>
   </vbox>
-</window>' | $GTK3DIALOG -s
+</window>' | $GTK3DIALOG -s --styles=./window.css
 fi
 done

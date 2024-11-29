@@ -1,0 +1,58 @@
+#!/bin/sh
+
+[ -z $GTK3DIALOG ] && GTK3DIALOG=gtk3dialog
+
+for pos in topstride hstride bottomstride leftstride vstride rightstride; do
+	case $pos in
+		topstride|hstride|bottomstride)box=hbox
+		label='"<span font_desc='"'mono normal 18'"'>Click!</span>"'
+		;;
+		leftstride|vstride|rightstride)box=vbox
+		label='"<span font_desc='"'mono normal 18'"'>C
+l
+i
+c
+k
+!</span>"'
+		;;
+	esac
+
+if [ -z "WAYLAND_DISPLAY" ]; then
+	echo '<window>
+	       <vbox>
+	         <text><label>ERROR: You are not running wayland</label></text>
+	       <hbox>
+	         <button ok></button>
+	       </hbox>
+	       </vbox>
+	     </window>' | $GTK3DIALOG -s
+	     exit
+fi
+
+PID=$$
+
+MAIN_DIALOG='
+<window layer="top" dist="2" edge="'$pos'" tooltip-text="You are at - '$pos'">
+	<'$box' homogeneous="true">
+			<text use-markup="true">
+				<label>'$label'</label>
+			</text>
+			<button>
+				<input file icon="input-mouse"></input>
+				<action>exit:OK</action>
+			</button>
+			<button>
+				<input file icon="gtk-cancel"></input>
+				<action>kill '$PID'</action>
+				<action>exit:CANCEL</action>
+			</button>
+	</'$box'>
+</window>
+'
+export MAIN_DIALOG
+
+case $1 in
+	-d | --dump) echo "$MAIN_DIALOG" ;;
+	*) $GTK3DIALOG --program=MAIN_DIALOG --styles=./window.css;;
+esac
+done
