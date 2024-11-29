@@ -20,8 +20,8 @@ for i in background bottom top overlay
 do
 	o=" $i"
 	case $i in
-		background)T='All windows can cover this.';;
-		bottom)T='Most windows can cover this.';;
+		background)T='All windows can cover this.'; TIMER='<timer interval="3" visible="false"><action>exit:BYE</action></timer>';;
+		bottom)T='Most windows can cover this.'; TIMER='<timer interval="6" visible="false"><action>exit:BYE</action></timer>';;
 		top)T='Only overlay windows can cover this.';;
 		overlay)T='No windows can cover this.';o="n $i";;
 	esac
@@ -37,6 +37,7 @@ MAIN_DIALOG='
 			<text>
 				<label>'$T'</label>
 			</text>
+			'$TIMER'
 		</frame>
 		<hbox>
 			<button ok></button>
