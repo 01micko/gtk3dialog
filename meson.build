@@ -24,6 +24,10 @@ else
 	vte = dependency('vte', required: false)
 endif
 
+install_subdir(
+	'man', install_dir : get_option('datadir')
+)
+
 if get_option('docs')
 	subdir('doc')
 	install_subdir(

@@ -1,0 +1,380 @@
+'\" t
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "GTK3DIALOG" "1" "" ""
+.SH NAME
+gtk3dialog \- Gtk3dialog
+.SH SYNOPSIS
+.nf
+\fBgtk3dialog\fP [OPTIONS…]
+.fi
+.sp
+.SH DESCRIPTION
+.sp
+gtk3dialog creates dialog boxes and windows according to the given dialog
+description.
+.SH OPTIONS
+.sp
+gtk3dialog executable can be invoked with the following options:
+.INDENT 0.0
+.TP
+.B \-h | \-\-help
+Show help options
+.TP
+.B \-v | \-\-version
+Print version and build information and exit.
+.TP
+.B \-d | \-\-debug
+Debug mode prints the processed characters.
+.TP
+.B \-p | \-\-program=variable
+Get the GUI description from the environment.
+.TP
+.B \-f | \-\-file=filename
+Get the GUI description from a regular file.
+.TP
+.B \-i | \-\-include=filename
+Include the given file when executing.
+.TP
+.B \-e | \-\-event\-driven=filename
+Execute the file as an event driven program.
+.TP
+.B \-s | \-\-stdin
+Get the GUI description from standard input.
+.TP
+.B \-w | \-\-no\-warning
+Suppress warning messages.
+.TP
+.B \-G | \-\-geometry=[XxY][+W+H]
+The placement and the size of the window.
+.TP
+.B \-c | \-\-center
+Center the windows on the screen.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B  \-\-print\-ir
+Print the internal representation and exit.
+.TP
+.BI \-\-space\-expand\fB= state
+The \(dqexpand\(dq state for packing all widgets.
+.TP
+.BI \-\-space\-fill\fB= state
+The \(dqfill\(dq state for packing all widgets.
+.TP
+.BI \-\-styles\fB= filename
+Load styles in the form of a style sheet.
+.TP
+.BI \-\-display\fB= DISPLAY
+X display to use
+.UNINDENT
+.SH USAGE
+.SS Dialog description syntax
+.sp
+\fBgtk3dialog\fP uses a simple \fBXML\fP style language to describe the
+heirarchy of the different widgets.
+.sp
+As an example, in it\(aqs simplest form \fBgtk3dialog\fP can be called from
+\fIstdin\fP :
+.nf
+
+.in +2
+echo \(aq<window>
+.in +2
+.in +2
+<vbox>
+.in +2
+<text label=\(dqHello World\(dq></text>
+<hbox>
+.in +2
+<button ok></button>
+.in -2
+</hbox>
+.in -2
+</vbox>
+.in -2
+</window>\(aq | gtk3dialog \-s
+.in -2
+.in -2
+.fi
+.sp
+.sp
+More complex dialog descriptions can be stored in an \fIenvironment\fP
+variable: Typically as such :
+.nf
+
+.in +2
+export MAIN_DIALOG=\(aq<window>
+<vbox>
+.in +2
+.in +2
+<text label=\(dqHello World\(dq></text>
+.in +2
+<hbox>
+.in +2
+<button ok></button>
+.in -2
+</hbox>
+.in -2
+</vbox>
+.in -2
+</window>\(aq
+gtk3dialog \-\-program=MAIN_DIALOG
+.in -2
+.in -2
+.fi
+.sp
+.SS Available Widgets
+.sp
+The following is a list of available widgets:
+.TS
+box center;
+l|l.
+T{
+Widget
+T}	T{
+Type
+T}
+_
+T{
+\fBbutton\fP
+T}	T{
+Simple push button
+T}
+_
+T{
+\fBcheckbox\fP
+T}	T{
+Check mark box
+T}
+_
+T{
+\fBchooser\fP
+T}	T{
+Choice
+T}
+_
+T{
+\fBcolorbutton\fP
+T}	T{
+Color selection
+T}
+_
+T{
+\fBcomboboxentry\fP
+T}	T{
+Drop down list
+T}
+_
+T{
+\fBcomboboxtext\fP
+T}	T{
+Drop down list
+T}
+_
+T{
+\fBedit\fP
+T}	T{
+Text editor box
+T}
+_
+T{
+\fBentry\fP
+T}	T{
+Entry for text
+T}
+_
+T{
+\fBeventbox\fP
+T}	T{
+Catch signals
+T}
+_
+T{
+\fBexpander\fP
+T}	T{
+Hide/show a widget
+T}
+_
+T{
+\fBfontbutton\fP
+T}	T{
+Font selection
+T}
+_
+T{
+\fBframe\fP
+T}	T{
+Outer border
+T}
+_
+T{
+\fBhbox\fP
+T}	T{
+Horizontal container
+T}
+_
+T{
+\fBhscale\fP
+T}	T{
+Horizontal slider
+T}
+_
+T{
+\fBhseparator\fP
+T}	T{
+Horizontal line
+T}
+_
+T{
+\fBmenu\fP
+T}	T{
+Drop down menu
+T}
+_
+T{
+\fBmenubar\fP
+T}	T{
+Container for menu
+T}
+_
+T{
+\fBmenuitem\fP
+T}	T{
+Item of menu
+T}
+_
+T{
+\fBmenuitemseparator\fP
+T}	T{
+Horizontal line
+T}
+_
+T{
+\fBnotebook\fP
+T}	T{
+Flip pages
+T}
+_
+T{
+\fBpixmap\fP
+T}	T{
+Picture or image
+T}
+_
+T{
+\fBprogressbar\fP
+T}	T{
+Progress status
+T}
+_
+T{
+\fBradiobutton\fP
+T}	T{
+Single selection
+T}
+_
+T{
+\fBspinbutton\fP
+T}	T{
+Value changer
+T}
+_
+T{
+\fBstatusbar\fP
+T}	T{
+Show status
+T}
+_
+T{
+\fBterminal\fP
+T}	T{
+Virtual terminal
+T}
+_
+T{
+\fBtext\fP
+T}	T{
+Shows text
+T}
+_
+T{
+\fBtimer\fP
+T}	T{
+Fire signal at interval
+T}
+_
+T{
+\fBtogglebutton\fP
+T}	T{
+Toggle values
+T}
+_
+T{
+\fBtree\fP
+T}	T{
+List of options
+T}
+_
+T{
+\fBvbox\fP
+T}	T{
+Vertical container
+T}
+_
+T{
+\fBvscale\fP
+T}	T{
+Vertical slider
+T}
+_
+T{
+\fBvseparator\fP
+T}	T{
+Vertical line
+T}
+_
+T{
+\fBwindow\fP
+T}	T{
+The top level container
+T}
+.TE
+.SS More Documentation
+.sp
+\fBHTML\fP documentation is available in \fI/usr/share/docs/gtk3dialog/reference/\fP
+\fBExamples\fP are available in \fI/usr/share/docs/gtk3dialog/examples/\fP
+.SH SEE ALSO
+.sp
+gtk3dialog(5)
+.SH COPYRIGHT
+GPLv2+
+.\" Generated by docutils manpage writer.
+.

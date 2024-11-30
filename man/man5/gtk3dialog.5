@@ -1,0 +1,590 @@
+.\" Man page generated from reStructuredText.
+.
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.TH "GTK3DIALOG" "5" "" ""
+.SH NAME
+gtk3dialog \- Gtk3dialog
+.SH SYNOPSIS
+.nf
+export MAIN_DIALOG=<window<\fIdialog desription goes here/\fP></window>
+\fBgtk3dialog\fP \-\-program=MAIN_DIALOG
+.fi
+.sp
+.SS Gtk3dialog User\(aqs Manual
+.INDENT 0.0
+.INDENT 3.5
+This manual documents version 0.1.0 of the
+Gtk3dialog utility.
+.sp
+Copyright © 2003 Laszlo Pere.
+.INDENT 0.0
+.INDENT 3.5
+Permission is granted to copy, distribute and/or modify this
+document under the terms of the GNU Free Documentation License,
+Version 1.1 or any later version published by the Free Software
+Foundation; with no Invariant Sections, with no Front\-Cover Texts,
+and with no Back\-Cover Texts.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS 1 Introduction
+Gtk3dialog is a small utility program based on the GTK+ library.
+The program mainly made for GUI development for shell scripts but
+can be used with many other programming languages. The programmer
+can easily create GUI not just for any shell script or UNIX
+command but for any interpreted or compiled program capable to
+start child process and use pipes.
+.SS 2 Invoking the Program
+.INDENT 0.0
+.INDENT 3.5
+Our first example program shows how to call the \fI\(aqgtk3dialog\(aq\fP from
+a BASH script.
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+export MAIN_DIALOG=\(aq
+.in +2
+<vbox>
+.in +2
+<text>
+.in +2
+<label>This is a label...</label>
+.in -2
+</text>
+<hbox>
+.in +2
+<button ok></button>
+<button cancel></button>
+.in -2
+</hbox>
+.in -2
+</vbox>\(aq
+
+.in -2
+gtk3dialog \-\-program MAIN_DIALOG
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+This example uses a very plain way to open a dialog box. We store
+the description of the dialog box in the \fI\(aqMAIN_DIALOG\(aq\fP
+environment variable which is exported to the child processes with
+the BASH \fI\(aqexport\(aq\fP built\-in. Then we call the \fI\(aqgtk3dialog\(aq\fP
+program with the \fI\(aq—program\(aq\fP option which is followed by the name
+of the variable holding the dialog box description. It is simple
+and easy to write BASH scripts in this manner.
+.sp
+A similar calling method can be used when user input is needed.
+The \fI\(aqgtk3dialog\(aq\fP send the state of the widgets to the standard
+output when exiting and this is how we can get user input for the
+BASH program. The next example code show the reading process.
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+#! /bin/bash
+
+export DIALOG=\(aq
+<vbox>
+.in +2
+<entry>
+.in +2
+<variable>ENTRY</variable>
+.in -2
+</entry>
+<hbox>
+.in +2
+<button ok></button>
+<button cancel></button>
+.in -2
+</hbox>
+.in -2
+</vbox>\(aq
+
+I=$IFS; IFS=\(dq\(dq
+for STATEMENTS in  $(gtk3dialog \-\-program DIALOG); do
+.in +2
+eval $STATEMENTS
+.in -2
+done
+IFS=$I
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+In the example script we use the \fI\(aqfor\(aq\fP built\-in to go through
+the list \fI\(aqgtk3dialog\(aq\fP produced. Changing the field separator
+(IFS) is a little bit disturbing but necessary since this is the
+only way to protect the space characters in user input.
+.sp
+In larger software projects it may be a good idea to break the
+code to separate files. Since \fI\(aqgtk3dialog\(aq\fP can read the
+description program from file it is easy to write self executable
+programs with it. This is how the next example constructed.
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+#! /usr/local/bin/gtk3dialog \-f
+<vbox>
+.in +2
+<checkbox>
+.in +2
+<label>This is a checkbox</label>
+<variable>CHECK1</variable>
+.in -2
+</checkbox>
+<checkbox>
+.in +2
+<label>Another one</label>
+<variable>CHECK2</variable>
+.in -2
+</checkbox>
+<button>
+.in +2
+<label>OK</label>
+.in -2
+</button>
+.in -2
+</vbox>
+
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+When used in this fashion the state of the widgets can get from
+the standard output of the script as usual.
+.UNINDENT
+.UNINDENT
+.SS 3 Widgets
+.INDENT 0.0
+.INDENT 3.5
+The dialog description language is a simple XML like language
+capable to denote any complex dialog box containing widgets and
+boxes.
+.sp
+Widgets are simple GUI elements such as buttons, entry fields,
+lists, etc. Widget can have attributes, states and actions (*note
+Actions::).
+.sp
+The widgets are grouped together with containers (*note
+Containers::), horizontal and vertical boxes or frames. Every
+widget should placed in one of the containers, no widgets can be
+alone for it is dangerous outside.
+.sp
+Label is a static text widget created with \fI\(aq<text></text>\(aq\fP tag.
+.sp
+The text in a static label, can be set with the
+\fI\(aq<label>STRING</label>\(aq\fP or the \fI\(aq<input file>FILENAME</input>\(aq\fP
+expression.
+.sp
+The pushbutton is a clickable widget defined with the
+\fI\(aq<button></button>\(aq\fP tags.
+.sp
+The \fI\(aq<label>STRING</label>\(aq\fP directive sets the text label of the
+pushbutton. If no label and pixmap is given for the button,
+gtk3dialog will use OK as default.
+.sp
+When creating buttons, the \fI\(aq<input file>FILENAME</input>\(aq\fP tag
+can be used to insert a pixmap into the button. The FILENAME must
+be a pixmap file. Gtk3dialog will find this file with the
+\fI\(aqlocate\(aq\fP utility if necessary.
+.sp
+The pushbuttons can contain a label and a pixmap simultaneously.
+For this you have to use the \fI\(aq<label></label>\(aq\fP and the \fI\(aq<input
+file></input>\(aq\fP as the next example shows:
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+<button>
+.in +2
+<input file>/usr/share/GUIcompletion/button_save.xpm</input>
+<label>The label</label>
+.in -2
+</button>
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+The \fI\(aq<action>COMMAND</action>\(aq\fP directive tells the gtk3dialog
+what to do, when the button is pressed. If the action is not given
+explicitly the gtk3dialog uses the default action, which is to exit
+the program. In this case the printed variable list will contain a
+variable named EXIT, with the label of the activated button as
+value.
+.sp
+The buttons can handle more than one actions simultaneously. If
+there are more \fI\(aq<action></action>\(aq\fP directive for the given
+button, they will be executed one by one, in the right order.
+.sp
+The \fI\(aq<visible>STATE</visible>\(aq\fP specify the initial visibility of
+the button. The STATE can be either \fI\(aqenabled\(aq\fP or \fI\(aqdisabled\(aq\fP\&.
+When a button is disabled, it is shaded and can not be activated
+by mouse or keyboard.
+.sp
+Gtk3dialog supports a few pre\-defined pushbuttons for simplify the
+creation of dialog boxes. The pre\-defined buttons can be used the
+same manner the normal pushbuttons, but they have a default text,
+pixmap and output variable. Here is the list of available
+pre\-defined pushbuttons:
+.INDENT 0.0
+.IP \(bu 2
+\fI\(aq<button ok></button>\(aq\fP
+.IP \(bu 2
+\fI\(aq<button cancel></button>\(aq\fP
+.IP \(bu 2
+\fI\(aq<button help></button>\(aq\fP
+.IP \(bu 2
+\fI\(aq<button yes></button>\(aq\fP
+.IP \(bu 2
+\fI\(aq<button no></button>\(aq\fP
+.UNINDENT
+.sp
+The entry widget is a simple text input field, which can be used
+to get a string from the user.
+.sp
+The \fI\(aq<default>STRING</default>\(aq\fP directive sets the default
+content of the entry.
+.sp
+The \fI\(aq<sensitive>SENSITIVITY</sensitive>\(aq\fP sets the initial state of
+the entry widget. The SENSITIVITY can be \fI\(aqenabled\(aq\fP, which means
+the entry can be used, \fI\(aqdisabled\(aq\fP, which means the content of
+the entry can not be altered or \fI\(aqpassword\(aq\fP\&.
+.sp
+The entry widgets with the sensitivity set to \fI\(aqpassword\(aq\fP are
+editable, but unreadable as it is common with entries holding
+password style information.
+.sp
+The entry widgets are activating actions after their contents are
+changed.
+.sp
+The checkbox is a simple widget with a label and a check mark
+which can be turned on and off by the user. Checkboxes are made
+.sp
+The label is the text shown beside the check mark. Every checkbox
+should have a label.
+.sp
+The initial state of the checkbox can be set by the
+\fI\(aq<default>STATE</default>\(aq\fP directive, where the STATE can be
+either \fI\(aqyes\(aq\fP or \fI\(aqno\(aq\fP\&.
+.sp
+The \fI\(aq<action></action>\(aq\fP directive tells the gtk3dialog what to
+do, when the state of the checkbox is changed. As every widgets,
+the checkbox can hold multiply actions which are executed serially
+in the order they are written.
+.sp
+Actions of checkboxes can be written as conditional instructions
+with \fI\(aqif true\(aq\fP and \fI\(aqif false\(aq\fP prefixes as in the next example:
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+<checkbox>
+.in +2
+<label>This is a checkbox...</label>
+<variable>CHECKBOX</variable>
+<action>echo Checkbox is $CHECKBOX now.</action>
+<action>if true enable:ENTRY</action>
+<action>if false disable:ENTRY</action>
+.in -2
+</checkbox>
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+The \fI\(aq<visible>STATE</visible>\(aq\fP specify the initial visibility of
+the checkbox. The STATE can be either \fI\(aqenabled\(aq\fP or \fI\(aqdisabled\(aq\fP\&.
+When a checkbox is disabled, it is shaded and its state can not be
+altered anyway.
+.sp
+The value of a checkbox can be \fI\(aqtrue\(aq\fP or \fI\(aqfalse\(aq\fP and depends
+only on its state.
+.sp
+The \fI\(aq<pixmap></pixmap>\(aq\fP defines a static pixmap widget.
+.sp
+The widget must have an input file defined with the \fI\(aq<input
+file>FILENAME</input>\(aq\fP tags. The FILENAME is the graphic image
+file for the pixmap. Gtk3dialog will load this file if it can be
+opened for read, or will try to find a file with similar name
+(using the \fI\(aqlocate\(aq\fP utility program) if the file is unreadable.
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+<pixmap>
+.in +2
+<input file>help.png</input>
+.in -2
+</pixmap>
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+The \fI\(aq<menubar></menubar>\(aq\fP defines menu bar which can be placed
+as any other screen elements. In the menubar widget you have to
+create menus with the \fI\(aq<menu></menu>\(aq\fP tag, and inside the menu
+must be at least one menu item created by the
+\fI\(aq<menuitem></menuitem>\(aq\fP tag.
+.sp
+The next example shows how to create a simple menubar with only
+one menu:
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+.in +2
+<menubar>
+.in +2
+<menu>
+.in +2
+.in +2
+<menuitem>
+.in +2
+<label>gtk\-open</label>
+.in -2
+</menuitem>
+<menuitem>
+.in +2
+<label>gtk\-save</label>
+.in -2
+.in -2
+</menuitem>
+.in +2
+<menuitem>
+.in +2
+<label>gtk\-quit</label>
+<action>EXIT=\(dqquit\(dq</action>
+.in -2
+</menuitem>
+<label>File</label>
+.in -2
+.in -2
+</menu>
+.in -2
+.in -2
+</menubar>
+.in -2
+.fi
+.sp
+.INDENT 0.0
+.INDENT 3.5
+OK, it is not complete, but the next example seems to be just
+fine.
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+\fB<vbox>\fP
+.in +2
+\fB<tree>\fP
+.in +2
+.in +2
+\fB<label>Device    |Directory        |File         </label>\fP
+\fB<item>Hard drive |/usr/            |letter.tex    </item>\fP
+\fB<item>Hard drive |/etc/            |inittab       </item>\fP
+\fB<item>Hard drive |/etc/            |fstab         </item>\fP
+\fB<item>Network    |alpha:/home      |quota.user    </item>\fP
+\fB<item>Network    |alpha:/home      |quota.group   </item>\fP
+\fB<item>Network    |beta:/home/pipas |tmp           </item>\fP
+\fB<item>Network    |beta:/home/pipas |latexfiles    </item>\fP
+\fB<item>Network    |beta:/home/pipas |book          </item>\fP
+\fB<item>Network    |beta:/home/pipas |bin           </item>\fP
+\fB<item>Network    |beta:/home/pipas |documentation </item>\fP
+.in -2
+\fB</tree>\fP
+\fB<button ok></button>\fP
+.in -2
+.in -2
+\fB</vbox>\fP
+.in -2
+.fi
+.sp
+.SS 4 Containers
+.INDENT 0.0
+.INDENT 3.5
+The main toplevel container is the <window> widget. Packed into a
+window are usually <vbox> and/or <hbox> container widgets.
+.sp
+The <vbox> widget, as it\(aqs name implies, packs other widgets in a
+vertical direction from top to bottom.
+.sp
+Th <hbox> widgets packs other widgets in a hoeizontal direction
+from left to right.
+.UNINDENT
+.UNINDENT
+.nf
+
+.in +2
+<window icon\-name=\(dqabout\(dq>
+.in +2
+.in +2
+<vbox>
+.in +2
+.in +2
+<frame Description>
+.in +2
+.in +2
+<text>
+.in +2
+<label>This is an example window.</label>
+.in -2
+</text>
+.in -2
+</frame>
+<hbox>
+.in +2
+<button ok></button>
+<button cancel></button>
+.in -2
+</hbox>
+.in -2
+.in -2
+</vbox>
+.in -2
+.in -2
+</window>
+.in -2
+.in -2
+.fi
+.sp
+.SS 5 Actions
+.INDENT 0.0
+.INDENT 3.5
+When the user changes the state of a widget, gtk3dialog checks if
+there is something to do with it. If the tampered widget have one
+or more actions, the program will execute them for the new
+situation to be handled.
+.sp
+Every widget can have multiply actions, a list of commands must be
+executed when the widget changed. Gtk3dialog executes the axtions
+in the order they found in the dialog description program, so one
+can write a complet program as a series of instructions.
+.sp
+If the action of a widget is created with the simple
+\fI\(aq<action>COMMAND</action>\(aq\fP directive, gtk3dialog will execute it
+in a subshell. That means it will start up \fI\(aq/bin/sh\(aq\fP to handle
+the operation. Here is how the subshell operation works:
+.INDENT 0.0
+.IP 1. 3
+First gtk3dialog updates the environment variables holds the
+state and value of the widgets. This is how the child process
+will know what is happening in the GUI called it.
+.IP 2. 3
+Next the include file is checked. If the gtk3dialog started with
+the \fI\(aq\-i FILE\(aq\fP option gtk3dialog will ask the subshell to
+include the FILE before the execution of command.
+.INDENT 3.0
+.INDENT 3.5
+This strange method is needed for the action driven
+programs, where the subshell have to load the shell
+functions from the calling script.
+.UNINDENT
+.UNINDENT
+.IP 3. 3
+At the third step gtk3dialog starts the command and waits for it
+to complete. (Commands usually can be run in the background by
+writing a \fI\(aq&\(aq\fP as last character, so the subshell will not
+wait the program to complete.)
+.UNINDENT
+.sp
+The \fI\(aqExit:VALUE\(aq\fP command exits \fI\(aqgtk3dialog\(aq\fP immediately. The
+VALUE will be printed to standard output as the value of the
+variable named EXIT.
+.sp
+The command closes the named window opened by the \fI\(aqLaunch:\(aq\fP
+command. The program remain active if there are more windows
+active.
+.sp
+The command opens a new window using the environment variable
+\fI\(aqWidget\(aq\fP\&.
+.sp
+The command disables the given widget if it is enabled. If the
+widget is disabled when the command is activated, nothing happens.
+.sp
+The disabled widgets are insensitive to user actions, their shapes
+are indicating they are temporary unavailable.
+.sp
+The command enables the given widget if it is diabled. If the
+widget is enabled nothing happens.
+.sp
+The command refresh the named widget. If the widget have one or
+more input actions, they will be called by \fI\(aqgtk3dialog\(aq\fP\&.
+.sp
+Some widgets can hold much data. (Currently only the edit widget
+capable to perform this action.)
+.sp
+The \fI\(aqSave:\(aq\fP action will save the data found in the named widget
+to the filename found in \fI\(aq<output file>\(aq\fP attribute.
+.UNINDENT
+.UNINDENT
+.SS Other Resources
+.INDENT 0.0
+.INDENT 3.5
+If you have the \fBdoc\fP package installed you will find \fIHTML\fP
+documentation in:
+.INDENT 0.0
+.INDENT 3.5
+/usr/share/doc/gtk3dialog/reference/
+.UNINDENT
+.UNINDENT
+.sp
+Also there are many \fIexamples\fP in:
+.INDENT 0.0
+.INDENT 3.5
+/usr/share/doc/gtk3dialog/examples/
+.UNINDENT
+.UNINDENT
+.sp
+documented on: 2024\-11\-29
+.UNINDENT
+.UNINDENT
+.SH SEE ALSO
+.sp
+gtk3dialog(1)
+.SH COPYRIGHT
+GPLv2+
+.\" Generated by docutils manpage writer.
+.

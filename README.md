@@ -34,7 +34,7 @@ In no particualr order:
 - [x] update all deprecated functions - with exceptions
 - [ ] fix the rest of the compiler warnings
 - [ ] add at least `gtk-grid` widget
-- [ ] fix documentataion including a `man` page
+- [x] fix documentataion including a `man` page
 - [x] even better wayland support
 - [ ] CSD (maybe)
 - [x] fix examples and `html` docs for new name
