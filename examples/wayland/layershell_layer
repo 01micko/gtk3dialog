@@ -14,16 +14,33 @@ if [ -z "WAYLAND_DISPLAY" ]; then
 	     exit
 fi
 
-PID=$$
+export PID=$$
+export SPID
+
+fnc_msg() {
+	echo '<window layer="top" edge="top" dist="200"  width-request="200">
+	<vbox name="splash">
+		<hbox name="splash">
+		<pixmap name="splash"><width>42</width><input file icon="gtk-info"></input></pixmap>
+		<text name="splash">
+			<label>The window below may be covered. Just wait.</label>
+		</text>
+		</hbox>
+		<hbox name="splash">
+			<button ok></button>
+		</hbox>
+	</vbox>
+</window>' | $GTK3DIALOG -s --styles=./window.css  & SPID=$!
+}
 
 for i in background bottom top overlay
 do
 	o=" $i"
 	case $i in
-		background)T='All windows can cover this.'; TIMER='<timer interval="3" visible="false"><action>exit:BYE</action></timer>';;
+		background)fnc_msg;T='All windows can cover this.'; TIMER='<timer interval="4" visible="false"><action>kill '$SPID'</action><action>exit:BYE</action></timer>';;
 		bottom)T='Most windows can cover this.'; TIMER='<timer interval="6" visible="false"><action>exit:BYE</action></timer>';;
-		top)T='Only overlay windows can cover this.';;
-		overlay)T='No windows can cover this.';o="n $i";;
+		top)T='Only overlay windows can cover this.'; TIMER='';;
+		overlay)T='No windows can cover this.';o="n $i"; TIMER='';;
 	esac
 	
 

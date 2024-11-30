@@ -117,7 +117,7 @@
 </tr>
 <tr>
 <td class="wiki">icon-name</td>
-<td class="wiki">Gtk theme icon</td>
+<td class="wiki">Gtk theme icon - this sets the program name</td>
 <td class="wiki"></td>
 <td class="wiki">0.8.5</td>
 </tr>
@@ -140,6 +140,12 @@
 <td class="wiki">0.8.1</td>
 </tr>
 <tr>
+<td class="wiki">name</td>
+<td class="wiki">A custom theme name</td>
+<td class="wiki"><tt>string</tt></td>
+<td class="wiki">0.8.1</td>
+</tr>
+<tr>
 <td class="wiki">layer</td>
 <td class="wiki">Layer to render on Wayland desktop (Wayland only)</td>
 <td class="wiki"><tt>background</tt>, <tt>bottom</tt>, <tt>top</tt> or <tt>overlay</tt></td>
@@ -155,7 +161,19 @@
 <td class="wiki">edge (continued)</td>
 <td class="wiki"></td>
 <td class="wiki"><tt>topright</tt>, <tt>right</tt>, <tt>bottomright</tt>, <tt>bottom</tt></td>
-<td class="wiki"></td>
+<td class="wiki">0.8.5</td>
+</tr>
+<tr>
+<td class="wiki">edge (continued)</td>
+<td class="wiki">Horizontally stretch across the screen (Wayland only)</td>
+<td class="wiki"><tt>topstride</tt>, <tt>hstride</tt>, <tt>bottomstride</tt></td>
+<td class="wiki">0.8.5</td>
+</tr>
+<tr>
+<td class="wiki">edge (continued)</td>
+<td class="wiki">Vertically stretch across the screen (Wayland only)</td>
+<td class="wiki"><tt>leftstride</tt>, <tt>vstride</tt>, <tt>rightstride</tt></td>
+<td class="wiki">0.8.5</td>
 </tr>
 </tbody>
 </table>
@@ -436,7 +454,7 @@
 <li><p>This widget has a default border width of 5 which can be overridden with the “border-width” (<a href="https://docs.gtk.org/gtk3/property.Container.border-width.html">Gtk3</a>) tag attribute.</p></li>
 </ol>
 <h2 id="wayland">Wayland</h2>
-<p>Support for Wayland compositors is only available if you build against <tt>gtk-3</tt> using the <tt>meson</tt> build system instead of gnu <tt>autotools</tt>, however <tt>gtk3dialog</tt> will still work if using <tt>autotools</tt> and <tt>gtk-3</tt>, just without Wayland modifications.</p>
+<p>Support for Wayland compositors is only available if you build against <tt>gtk-3</tt> using the <tt>meson</tt> build system.</p>
 <h3 id="notes-for-wayland">Notes for Wayland</h3>
 <ol type="1">
 <li><p><tt>-G, --geometry</tt> CLI option does not work on Wayland. Use <tt>edge</tt></p></li>
