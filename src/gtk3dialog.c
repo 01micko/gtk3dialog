@@ -245,7 +245,7 @@ gtk3dialog_init(
 	if (argc > 1 && g_utf8_strchr(argv[1], -1, ' ') != NULL) {
 		gint   optionindex;
 		gchar *tmp;
-		gchar *command_line;
+		gchar *command_line = NULL;
 
 		PIP_DEBUG("Must re-slice the options.");
 		/*
@@ -291,7 +291,7 @@ gtk3dialog_init(
 	context = g_option_context_new(
 "\n"
 "Create dialog boxes and windows according to the given dialog description.\n"
-"For more information try 'info gtk3dialog'."
+"For more information try 'man gtk3dialog'."
 );
 
 	g_option_context_add_main_entries(context, entries, PACKAGE);
