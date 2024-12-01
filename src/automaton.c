@@ -1338,6 +1338,7 @@ int token_store(token command)
 	inst.command = command;
 	inst.argument = NULL;
 	inst.tag_attributes = NULL;
+	inst.ival = 0;
 	
 	instruction_new(inst);
 	return TRUE;
@@ -1377,6 +1378,7 @@ token_store_attr(token command,
 	inst.command = command;
 	inst.argument = NULL;
 	inst.tag_attributes = attributes;
+	inst.ival = 0;
 	instruction_new(inst);
 
 	return TRUE;
@@ -1393,6 +1395,7 @@ token_store_with_tag_attributes(
 	inst.command = command;
 	inst.argument = NULL;
 	inst.tag_attributes = NULL;
+	inst.ival = 0;
 	instruction_new(inst);
 
 	return TRUE;
@@ -1436,6 +1439,7 @@ token_store_with_argument_attr(
 	}
 
 	inst.tag_attributes = attributes;
+	inst.ival = 0;
 
 	if (argument == NULL)
 		argument = "";
