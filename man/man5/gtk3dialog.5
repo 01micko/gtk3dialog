@@ -32,7 +32,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 gtk3dialog \- Gtk3dialog
 .SH SYNOPSIS
 .nf
-export MAIN_DIALOG=<window<\fIdialog desription goes here/\fP></window>
+export MAIN_DIALOG=<window><\fIdialog desription goes here/\fP></window>
 \fBgtk3dialog\fP \-\-program=MAIN_DIALOG
 .fi
 .sp
@@ -203,7 +203,7 @@ Actions::).
 .sp
 The widgets are grouped together with containers (*note
 Containers::), horizontal and vertical boxes or frames. Every
-widget should placed in one of the containers, no widgets can be
+widget should be placed in one of the containers, no widgets can be
 alone for it is dangerous outside.
 .sp
 Label is a static text widget created with \fI\(aq<text></text>\(aq\fP tag.
@@ -259,7 +259,7 @@ the button. The STATE can be either \fI\(aqenabled\(aq\fP or \fI\(aqdisabled\(aq
 When a button is disabled, it is shaded and can not be activated
 by mouse or keyboard.
 .sp
-Gtk3dialog supports a few pre\-defined pushbuttons for simplify the
+Gtk3dialog supports a few pre\-defined pushbuttons to simplify the
 creation of dialog boxes. The pre\-defined buttons can be used the
 same manner the normal pushbuttons, but they have a default text,
 pixmap and output variable. Here is the list of available
@@ -292,11 +292,11 @@ The entry widgets with the sensitivity set to \fI\(aqpassword\(aq\fP are
 editable, but unreadable as it is common with entries holding
 password style information.
 .sp
-The entry widgets are activating actions after their contents are
+The entry widgets activate actions after their contents are
 changed.
 .sp
 The checkbox is a simple widget with a label and a check mark
-which can be turned on and off by the user. Checkboxes are made
+which can be turned on and off by the user.
 .sp
 The label is the text shown beside the check mark. Every checkbox
 should have a label.
@@ -306,8 +306,8 @@ The initial state of the checkbox can be set by the
 either \fI\(aqyes\(aq\fP or \fI\(aqno\(aq\fP\&.
 .sp
 The \fI\(aq<action></action>\(aq\fP directive tells the gtk3dialog what to
-do, when the state of the checkbox is changed. As every widgets,
-the checkbox can hold multiply actions which are executed serially
+do, when the state of the checkbox is changed. As with every widget,
+the checkbox can hold multiple actions which are executed serially
 in the order they are written.
 .sp
 Actions of checkboxes can be written as conditional instructions
@@ -410,7 +410,7 @@ one menu:
 .sp
 .INDENT 0.0
 .INDENT 3.5
-OK, it is not complete, but the next example seems to be just
+The next example shows the tree widget.
 fine.
 .UNINDENT
 .UNINDENT
@@ -451,7 +451,7 @@ window are usually <vbox> and/or <hbox> container widgets.
 The <vbox> widget, as it\(aqs name implies, packs other widgets in a
 vertical direction from top to bottom.
 .sp
-Th <hbox> widgets packs other widgets in a hoeizontal direction
+The <hbox> widgets packs other widgets in a horizontal direction
 from left to right.
 .UNINDENT
 .UNINDENT
@@ -494,14 +494,14 @@ from left to right.
 .INDENT 0.0
 .INDENT 3.5
 When the user changes the state of a widget, gtk3dialog checks if
-there is something to do with it. If the tampered widget have one
+there is something to do with it. If the tampered widget has one
 or more actions, the program will execute them for the new
 situation to be handled.
 .sp
-Every widget can have multiply actions, a list of commands must be
-executed when the widget changed. Gtk3dialog executes the axtions
+Every widget can have multiple actions, a list of commands must be
+executed when the widget is changed. Gtk3dialog executes the actions
 in the order they found in the dialog description program, so one
-can write a complet program as a series of instructions.
+can write a complete program as a series of instructions.
 .sp
 If the action of a widget is created with the simple
 \fI\(aq<action>COMMAND</action>\(aq\fP directive, gtk3dialog will execute it
@@ -509,9 +509,9 @@ in a subshell. That means it will start up \fI\(aq/bin/sh\(aq\fP to handle
 the operation. Here is how the subshell operation works:
 .INDENT 0.0
 .IP 1. 3
-First gtk3dialog updates the environment variables holds the
+First gtk3dialog updates the environment variables that holds the
 state and value of the widgets. This is how the child process
-will know what is happening in the GUI called it.
+will know what is happening in the GUI that called it.
 .IP 2. 3
 Next the include file is checked. If the gtk3dialog started with
 the \fI\(aq\-i FILE\(aq\fP option gtk3dialog will ask the subshell to
@@ -519,7 +519,7 @@ include the FILE before the execution of command.
 .INDENT 3.0
 .INDENT 3.5
 This strange method is needed for the action driven
-programs, where the subshell have to load the shell
+programs, where the subshell has to load the shell
 functions from the calling script.
 .UNINDENT
 .UNINDENT
@@ -530,30 +530,37 @@ writing a \fI\(aq&\(aq\fP as last character, so the subshell will not
 wait the program to complete.)
 .UNINDENT
 .sp
+.SS Exit dialog
 The \fI\(aqExit:VALUE\(aq\fP command exits \fI\(aqgtk3dialog\(aq\fP immediately. The
 VALUE will be printed to standard output as the value of the
 variable named EXIT.
 .sp
+.SS Closewindow:NAME
 The command closes the named window opened by the \fI\(aqLaunch:\(aq\fP
-command. The program remain active if there are more windows
+command. The program remains active if there are more windows
 active.
 .sp
+.SS Launch:NAME
 The command opens a new window using the environment variable
 \fI\(aqWidget\(aq\fP\&.
 .sp
+.SS Disable:NAME
 The command disables the given widget if it is enabled. If the
 widget is disabled when the command is activated, nothing happens.
 .sp
-The disabled widgets are insensitive to user actions, their shapes
+The disabled widgets are insensitive to user actions, their shades
 are indicating they are temporary unavailable.
 .sp
-The command enables the given widget if it is diabled. If the
+.SS Enable:NAME
+The command enables the given widget if it is disabled. If the
 widget is enabled nothing happens.
 .sp
+.SS Refresh:NAME
 The command refresh the named widget. If the widget have one or
 more input actions, they will be called by \fI\(aqgtk3dialog\(aq\fP\&.
 .sp
-Some widgets can hold much data. (Currently only the edit widget
+.SS Save:NAME
+Some widgets can hold much data. (Currently only the edit widget is
 capable to perform this action.)
 .sp
 The \fI\(aqSave:\(aq\fP action will save the data found in the named widget
