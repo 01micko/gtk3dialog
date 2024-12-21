@@ -1,0 +1,28 @@
+Source: gtk3dialog
+Section: misc
+Priority: optional
+Maintainer: Mick Amadio <01micko@gmail.com>
+Build-Depends: debhelper-compat (= 13), bison, flex, meson (>= 1.0), libgtk-3-dev, libglib2.0-dev, libnotify-dev, libgtk-layer-shell-dev
+Standards-Version: 4.6.2
+Homepage: https://github.com/01micko/gtk3dialog
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/01micko/gtk3dialog.git
+Vcs-Browser: https://github.com/01micko/gtk3dialog
+
+Package: gtk3dialog
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}, libgtk-3-0, libglib2.0-0, libnotify4, libgtk-layer-shell0, bash (>= 5.0)
+Description: graphical gui building application for x11 or wayland.
+ Gtk3dialog can display graphical GTK+ dialog boxes from the
+ command line or from shell scripts.
+ 
+
+Package: gtk3dialog-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: graphical gui building application for x11 or wayland docs.
+ Gtk3dialog can display graphical GTK+ dialog boxes from the
+ command line or from shell scripts.
+

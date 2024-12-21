@@ -1,0 +1,6 @@
+gtk3dialog for Debian
+
+This package provides a tool to create gtk graphical dialog boxes from
+shells scripts.
+
+ -- Mick Amadio <01micko@gmail.com>  Sat, 30 Nov 2024 17:02:37 +1000
