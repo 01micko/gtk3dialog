@@ -1,3 +1,15 @@
+gtk3dialog (0.1.1-2) boron; urgency=low
+
+  * Bugfix dependencies.
+
+ -- Mick Amadio <01micko@gmail.com>  Sun, 22 Dec 2024 14:28:50 +1000
+
+gtk3dialog (0.1.1-1) boron; urgency=low
+
+  * Bump upstream version.
+
+ -- Mick Amadio <01micko@gmail.com>  Sun, 22 Dec 2024 12:02:35 +1000
+
 gtk3dialog (0.1.0-1) UNRELEASED; urgency=low
 
   * Initial release. Closes no bugs.
