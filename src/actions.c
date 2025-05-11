@@ -606,7 +606,10 @@ static void _action_shellcommand(char *command)
 	             NULL,
 	             NULL);
 #else
-	system(command);
+	int ret = system(command);
+	if (ret != 0) {
+		printf("Return value of %s: %d\n", command, ret);
+	}
 #endif
 }
 
